@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
+import logoPCA from './Fondo blanco horizontal.png';
 
 // Logotipo oficial vectorial PCA (100% autocontenido en Data URI para que nunca falle ni dependa de internet)
-const LOGO_OFFICIAL_URL = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 750 180' width='100%' height='100%'><g fill='none' fill-rule='evenodd'><rect x='10' y='20' width='180' height='130' rx='65' stroke='%238EC63F' stroke-width='18' fill='none'/><circle cx='130' cy='85' r='26' fill='%230B1B3D'/><text x='230' y='115' font-family='Arial, Helvetica, sans-serif' font-size='100' font-weight='900' fill='%230B1B3D' letter-spacing='-3'>PCA</text><circle cx='465' cy='38' r='9' stroke='%238EC63F' stroke-width='2.5' fill='none'/><text x='465' y='41' font-family='Arial, sans-serif' font-size='10' font-weight='bold' fill='%238EC63F' text-anchor='middle'>R</text><text x='490' y='80' font-family='Arial, Helvetica, sans-serif' font-size='34' font-weight='bold' fill='%238EC63F'>Ingeniería &amp;</text><text x='490' y='118' font-family='Arial, Helvetica, sans-serif' font-size='34' font-weight='bold' fill='%238EC63F'>Automatización</text></g></svg>";
-
+const LOGO_OFFICIAL_URL = logoPCA;
 export default function App() {
   // Datos Generales
   const [cliente, setCliente] = useState('');
