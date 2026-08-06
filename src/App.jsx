@@ -167,7 +167,7 @@ export default function App() {
     }
   };
 
-  // Generación e Impresión en PDF
+  // Generación e Impresión en PDF con repetición de encabezado por página
   const generarPDF = (e) => {
     e.preventDefault();
     const urlFirmaClienteFinal = firmaClienteURL || (canvasClienteRef.current ? canvasClienteRef.current.toDataURL() : '');
@@ -185,97 +185,143 @@ export default function App() {
         <head>
           <title>Reporte Técnico ${folioCalculado} - ${cliente}</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 20px; color: #333; font-size: 12px; }
-            .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #8EC63F; padding-bottom: 12px; margin-bottom: 18px; }
+            @page {
+              size: A4;
+              margin: 15mm 10mm 15mm 10mm;
+            }
+            body { 
+              font-family: Arial, sans-serif; 
+              padding: 0; 
+              margin: 0;
+              color: #333; 
+              font-size: 12px; 
+            }
+            table.print-container {
+              width: 100%;
+              border-collapse: collapse;
+              border: none;
+            }
+            thead.print-header {
+              display: table-header-group;
+            }
+            tbody.print-body {
+              display: table-row-group;
+            }
+            .header-container { 
+              display: flex; 
+              align-items: center; 
+              justify-content: space-between; 
+              border-bottom: 2px solid #8EC63F; 
+              padding-bottom: 10px; 
+              margin-bottom: 15px; 
+              background: #fff;
+            }
             .logo-box { flex: 2; }
             .header-info { text-align: right; flex: 1.5; }
             .header-info h2 { margin: 0; color: #0B1B3D; font-size: 18px; font-weight: bold; }
             .header-info p { margin: 4px 0 0 0; font-weight: bold; color: #8EC63F; font-size: 13px; }
             .folio-badge { background: #0B1B3D; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 6px; }
+            
             .seccion { margin-bottom: 12px; page-break-inside: avoid; }
             .titulo-seccion { background: #0B1B3D; color: white; padding: 5px 8px; font-weight: bold; font-size: 12px; margin-bottom: 6px; border-radius: 3px; border-left: 4px solid #8EC63F; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-            th, td { border: 1px solid #ccc; padding: 5px 7px; text-align: left; }
-            th { background: #f2f2f2; width: 25%; font-weight: bold; color: #0B1B3D; }
+            table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+            table.data-table th, table.data-table td { border: 1px solid #ccc; padding: 5px 7px; text-align: left; }
+            table.data-table th { background: #f2f2f2; width: 25%; font-weight: bold; color: #0B1B3D; }
             .fotos-grid { display: flex; flex-wrap: wrap; gap: 4%; justify-content: flex-start; }
             .firmas-grid { display: flex; justify-content: space-between; margin-top: 25px; gap: 20px; page-break-inside: avoid; }
             .firma-box { width: 48%; text-align: center; }
             .firma-img { max-width: 180px; height: 50px; object-fit: contain; border-bottom: 1px solid #333; margin-bottom: 4px; }
-            footer { text-align: center; font-size: 10px; color: #777; margin-top: 25px; border-top: 1px solid #ddd; padding-top: 6px; }
+            footer { text-align: center; font-size: 10px; color: #777; margin-top: 25px; border-top: 1px solid #ddd; padding-top: 6px; page-break-inside: avoid; }
           </style>
         </head>
         <body>
-          <div class="header-container">
-            <div class="logo-box">
-              <img src="${LOGO_OFFICIAL_URL}" style="width: 270px; height: auto; display: block;" alt="PCA Ingeniería &amp; Servicios" />
-            </div>
-            <div class="header-info">
-              <h2>REPORTE TÉCNICO</h2>
-              <p>Servicios &amp; Mantenimiento</p>
-              <div class="folio-badge">FOLIO: ${folioCalculado}</div>
-            </div>
-          </div>
+          <table class="print-container">
+            <!-- ENCABEZADO QUE SE REPITE EN CADA PÁGINA IMPRESA -->
+            <thead class="print-header">
+              <tr>
+                <td>
+                  <div class="header-container">
+                    <div class="logo-box">
+                      <img src="${LOGO_OFFICIAL_URL}" style="width: 270px; height: auto; display: block;" alt="PCA Ingeniería &amp; Servicios" />
+                    </div>
+                    <div class="header-info">
+                      <h2>REPORTE TÉCNICO</h2>
+                      <p>Servicios &amp; Mantenimiento</p>
+                      <div class="folio-badge">FOLIO: ${folioCalculado}</div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </thead>
 
-          <div class="seccion">
-            <div class="titulo-seccion">DATOS GENERALES</div>
-            <table>
-              <tr><th>FOLIO DE SERVICIO:</th><td style="font-weight:bold; color:#0B1B3D;">${folioCalculado}</td><th>Fecha:</th><td>${fecha}</td></tr>
-              <tr><th>Cliente / Razón Social:</th><td>${cliente}</td><th>Tipo de Servicio:</th><td>${tipoTrabajo}</td></tr>
-              <tr><th>Sitio / Ubicación:</th><td>${sitio}</td><th>Técnico Responsable:</th><td>${tecnico}</td></tr>
-            </table>
-          </div>
+            <!-- CUERPO PRINCIPAL DEL REPORTE -->
+            <tbody class="print-body">
+              <tr>
+                <td>
+                  <div class="seccion">
+                    <div class="titulo-seccion">DATOS GENERALES</div>
+                    <table class="data-table">
+                      <tr><th>FOLIO DE SERVICIO:</th><td style="font-weight:bold; color:#0B1B3D;">${folioCalculado}</td><th>Fecha:</th><td>${fecha}</td></tr>
+                      <tr><th>Cliente / Razón Social:</th><td>${cliente}</td><th>Tipo de Servicio:</th><td>${tipoTrabajo}</td></tr>
+                      <tr><th>Sitio / Ubicación:</th><td>${sitio}</td><th>Técnico Responsable:</th><td>${tecnico}</td></tr>
+                    </table>
+                  </div>
 
-          <div class="seccion">
-            <div class="titulo-seccion">DATOS Y LECTURAS DEL EQUIPO</div>
-            <table>
-              <tr><th>Equipo Atendido:</th><td>${equipo}</td><th>Marca:</th><td>${marca}</td></tr>
-              <tr><th>Modelo:</th><td>${modelo}</td><th>No. Serie:</th><td>${serie}</td></tr>
-              <tr><th>Voltaje (V):</th><td>${voltaje}</td><th>Amperaje (A):</th><td>${amperaje}</td></tr>
-              <tr><th>Presión Alta (PSI):</th><td>${presionAlta}</td><th>Presión Baja (PSI):</th><td>${presionBaja}</td></tr>
-              <tr><th>Temp. Entrada (°C/°F):</th><td>${tempEntrada}</td><th>Temp. Salida (°C/°F):</th><td>${tempSalida}</td></tr>
-            </table>
-          </div>
+                  <div class="seccion">
+                    <div class="titulo-seccion">DATOS Y LECTURAS DEL EQUIPO</div>
+                    <table class="data-table">
+                      <tr><th>Equipo Atendido:</th><td>${equipo}</td><th>Marca:</th><td>${marca}</td></tr>
+                      <tr><th>Modelo:</th><td>${modelo}</td><th>No. Serie:</th><td>${serie}</td></tr>
+                      <tr><th>Voltaje (V):</th><td>${voltaje}</td><th>Amperaje (A):</th><td>${amperaje}</td></tr>
+                      <tr><th>Presión Alta (PSI):</th><td>${presionAlta}</td><th>Presión Baja (PSI):</th><td>${presionBaja}</td></tr>
+                      <tr><th>Temp. Entrada (°C/°F):</th><td>${tempEntrada}</td><th>Temp. Salida (°C/°F):</th><td>${tempSalida}</td></tr>
+                    </table>
+                  </div>
 
-          <div class="seccion">
-            <div class="titulo-seccion">TRABAJOS REALIZADOS Y OBSERVACIONES</div>
-            <div style="border: 1px solid #ccc; padding: 8px; background: #fafafa; min-height: 50px;">
-              ${observaciones.replace(/\n/g, '<br/>')}
-            </div>
-          </div>
+                  <div class="seccion">
+                    <div class="titulo-seccion">TRABAJOS REALIZADOS Y OBSERVACIONES</div>
+                    <div style="border: 1px solid #ccc; padding: 8px; background: #fafafa; min-height: 50px;">
+                      ${observaciones.replace(/\n/g, '<br/>')}
+                    </div>
+                  </div>
 
-          ${refacciones ? `
-          <div class="seccion">
-            <div class="titulo-seccion">REFACCIONES Y MATERIALES UTILIZADOS</div>
-            <div style="border: 1px solid #ccc; padding: 8px; background: #fafafa;">
-              ${refacciones.replace(/\n/g, '<br/>')}
-            </div>
-          </div>` : ''}
+                  ${refacciones ? `
+                  <div class="seccion">
+                    <div class="titulo-seccion">REFACCIONES Y MATERIALES UTILIZADOS</div>
+                    <div style="border: 1px solid #ccc; padding: 8px; background: #fafafa;">
+                      ${refacciones.replace(/\n/g, '<br/>')}
+                    </div>
+                  </div>` : ''}
 
-          ${fotos.length > 0 ? `
-          <div class="seccion">
-            <div class="titulo-seccion">EVIDENCIA FOTOGRÁFICA</div>
-            <div class="fotos-grid">
-              ${fotosHTML}
-            </div>
-          </div>` : ''}
+                  ${fotos.length > 0 ? `
+                  <div class="seccion">
+                    <div class="titulo-seccion">EVIDENCIA FOTOGRÁFICA</div>
+                    <div class="fotos-grid">
+                      ${fotosHTML}
+                    </div>
+                  </div>` : ''}
 
-          <div class="firmas-grid">
-            <div class="firma-box">
-              <p style="margin: 0 0 5px 0;"><strong>FIRMA TÉCNICO RESPONSABLE</strong></p>
-              ${urlFirmaTecnicoFinal ? `<img src="${urlFirmaTecnicoFinal}" class="firma-img" /><br/>` : '<div style="height:50px; border-bottom:1px solid #333;"></div>'}
-              <span><strong>${tecnico}</strong></span>
-            </div>
+                  <div class="firmas-grid">
+                    <div class="firma-box">
+                      <p style="margin: 0 0 5px 0;"><strong>FIRMA TÉCNICO RESPONSABLE</strong></p>
+                      ${urlFirmaTecnicoFinal ? `<img src="${urlFirmaTecnicoFinal}" class="firma-img" /><br/>` : '<div style="height:50px; border-bottom:1px solid #333;"></div>'}
+                      <span><strong>${tecnico}</strong></span>
+                    </div>
 
-            <div class="firma-box">
-              <p style="margin: 0 0 5px 0;"><strong>FIRMA CONFORMIDAD CLIENTE</strong></p>
-              ${urlFirmaClienteFinal ? `<img src="${urlFirmaClienteFinal}" class="firma-img" /><br/>` : '<div style="height:50px; border-bottom:1px solid #333;"></div>'}
-              <span><strong>${nombreFirmaCliente || cliente}</strong></span>
-            </div>
-          </div>
+                    <div class="firma-box">
+                      <p style="margin: 0 0 5px 0;"><strong>FIRMA CONFORMIDAD CLIENTE</strong></p>
+                      ${urlFirmaClienteFinal ? `<img src="${urlFirmaClienteFinal}" class="firma-img" /><br/>` : '<div style="height:50px; border-bottom:1px solid #333;"></div>'}
+                      <span><strong>${nombreFirmaCliente || cliente}</strong></span>
+                    </div>
+                  </div>
 
-          <footer>
-            PCA Ingeniería &amp; Servicios - Reporte ${folioCalculado} generado el ${new Date().toLocaleDateString('es-MX')}
-          </footer>
+                  <footer>
+                    PCA Ingeniería &amp; Servicios - Reporte ${folioCalculado} generado el ${new Date().toLocaleDateString('es-MX')}
+                  </footer>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
           <script>
             window.onload = function() { window.print(); };
