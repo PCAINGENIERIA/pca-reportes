@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 
-// Logotipo oficial horizontal PCA en SVG
-const LOGO_OFFICIAL_URL = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 240" width="100%"><g fill="none" fill-rule="evenodd"><rect x="30" y="40" width="220" height="160" rx="80" stroke="%238EC63F" stroke-width="24" fill="none"/><circle cx="180" cy="120" r="32" fill="%230B1B3D"/><text x="310" y="155" font-family="'Helvetica Neue', Arial, sans-serif" font-size="130" font-weight="900" fill="%230B1B3D" letter-spacing="-2">PCA</text><circle cx="602" cy="62" r="11" stroke="%238EC63F" stroke-width="3" fill="none"/><text x="602" y="66" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="%238EC63F" text-anchor="middle">R</text><text x="635" y="112" font-family="'Helvetica Neue', Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Ingeniería &amp;</text><text x="635" y="160" font-family="'Helvetica Neue', Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Automatización</text></g></svg>`;
+// URL del logotipo oficial o SVG optimizado para evitar errores de renderizado
+const LOGO_OFFICIAL_URL = "https://i.imgur.com/8QzN3qg.png"; // Puedes cambiar esta URL por la ruta exacta de tu servidor o archivo local (ej. "/assets/logo-pca.png")
 
 export default function App() {
   // Datos Generales
@@ -154,10 +154,9 @@ export default function App() {
           </style>
         </head>
         <body>
-          <!-- ENCABEZADO DEL REPORTE EN IMPRESIÓN / PDF -->
           <div class="header-container">
             <div class="logo-box">
-              <img src="${LOGO_OFFICIAL_URL}" style="width: 270px; height: auto; display: block;" alt="PCA Ingeniería &amp; Automatización" />
+              <img src="${LOGO_OFFICIAL_URL}" style="width: 270px; height: auto; display: block; object-fit: contain;" alt="PCA Ingeniería &amp; Automatización" />
             </div>
             <div class="header-info">
               <h2>REPORTE TÉCNICO</h2>
