@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 
-// Logotipo horizontal PCA centrado y compacto
-const LOGO_PCA_HORIZONTAL_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 180" width="100%"><g fill="none" fill-rule="evenodd"><path d="M100,30 L220,30 C253.137,30 280,56.863 280,90 C280,123.137 253.137,150 220,150 L100,150 C66.863,150 40,123.137 40,90 C40,56.863 66.863,30 100,30 Z" stroke="%238EC63F" stroke-width="18"/><circle cx="220" cy="90" r="28" fill="%230A1931"/><circle cx="530" cy="42" r="8" stroke="%238EC63F" stroke-width="2" fill="none"/><text x="530" y="45" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="%238EC63F" text-anchor="middle">R</text><path d="M310,40 L360,40 C388,40 408,56 408,82 C408,108 388,124 360,124 L338,124 L338,150 L310,150 L310,40 Z M338,62 L338,102 L356,102 C370,102 380,94 380,82 C380,70 370,62 356,62 L338,62 Z" fill="%230A1931"/><path d="M495,70 C488,60 475,54 452,54 C420,54 398,76 398,105 C398,134 420,156 452,156 C475,156 488,150 495,140 L495,165 C482,173 466,176 444,176 C392,176 366,142 366,105 C366,68 392,34 444,34 C466,34 482,37 495,45 L495,70 Z" fill="%230A1931"/><path d="M538,40 L568,40 L618,150 L588,150 L577,122 L527,122 L516,150 L486,150 L538,40 Z M552,68 L535,100 L569,100 L552,68 Z" fill="%230A1931"/><text x="635" y="85" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="%238EC63F">Ingeniería &amp;</text><text x="635" y="125" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="%238EC63F">Automatización</text></g></svg>`;
+// SVG del Logotipo Horizontal PCA corregido pixel por pixel segun la imagen original
+const LOGO_PCA_HORIZONTAL_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 240" width="100%"><g fill="none" fill-rule="evenodd"><rect x="30" y="40" width="220" height="160" rx="80" stroke="%238EC63F" stroke-width="24" fill="none"/><circle cx="180" cy="120" r="32" fill="%230B1B3D"/><text x="310" y="155" font-family="'Helvetica Neue', Arial, sans-serif" font-size="130" font-weight="900" fill="%230B1B3D" letter-spacing="-2">PCA</text><circle cx="602" cy="62" r="11" stroke="%238EC63F" stroke-width="3" fill="none"/><text x="602" y="66" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="%238EC63F" text-anchor="middle">R</text><text x="635" y="112" font-family="'Helvetica Neue', Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Ingeniería &amp;</text><text x="635" y="160" font-family="'Helvetica Neue', Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Automatización</text></g></svg>`;
 
 export default function App() {
   // Datos Generales
@@ -135,18 +135,18 @@ export default function App() {
           <title>Reporte Técnico - ${cliente}</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; color: #333; font-size: 12px; }
-            .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #8EC63F; padding-bottom: 10px; margin-bottom: 15px; }
+            .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #8EC63F; padding-bottom: 12px; margin-bottom: 18px; }
             .logo-center { flex: 1; text-align: center; }
-            .logo-img { max-width: 170px; height: auto; display: inline-block; }
+            .logo-img { max-width: 220px; height: auto; display: inline-block; }
             .header-info { text-align: right; flex: 1; }
-            .header-info h2 { margin: 0; color: #0A1931; font-size: 18px; font-weight: bold; }
+            .header-info h2 { margin: 0; color: #0B1B3D; font-size: 18px; font-weight: bold; }
             .header-info p { margin: 4px 0 0 0; font-weight: bold; color: #8EC63F; font-size: 13px; }
             .header-spacer { flex: 1; }
             .seccion { margin-bottom: 12px; }
-            .titulo-seccion { background: #0A1931; color: white; padding: 5px 8px; font-weight: bold; font-size: 12px; margin-bottom: 6px; border-radius: 3px; border-left: 4px solid #8EC63F; }
+            .titulo-seccion { background: #0B1B3D; color: white; padding: 5px 8px; font-weight: bold; font-size: 12px; margin-bottom: 6px; border-radius: 3px; border-left: 4px solid #8EC63F; }
             table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
             th, td { border: 1px solid #ccc; padding: 5px 7px; text-align: left; }
-            th { background: #f2f2f2; width: 25%; font-weight: bold; color: #0A1931; }
+            th { background: #f2f2f2; width: 25%; font-weight: bold; color: #0B1B3D; }
             .firmas-grid { display: flex; justify-content: space-between; margin-top: 25px; gap: 20px; }
             .firma-box { width: 48%; text-align: center; }
             .firma-img { max-width: 180px; height: 50px; object-fit: contain; border-bottom: 1px solid #333; margin-bottom: 4px; }
@@ -261,14 +261,14 @@ export default function App() {
 
   return (
     <div style={{ padding: '15px', maxWidth: '650px', margin: 'auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
-      {/* CABECERA CON LOGO HORIZONTAL CENTRADO Y COMPACTO */}
+      {/* CABECERA CON LOGO HORIZONTAL CENTRADO Y BIEN PROPORCIONADO */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '2px solid #8EC63F', paddingBottom: '10px' }}>
         <div style={{ flex: 1 }}></div>
         <div style={{ flex: 1, textAlign: 'center' }}>
-          <img src={LOGO_PCA_HORIZONTAL_SVG} alt="PCA Ingeniería & Automatización" style={{ maxWidth: '160px', height: 'auto' }} />
+          <img src={LOGO_PCA_HORIZONTAL_SVG} alt="PCA Ingeniería & Automatización" style={{ maxWidth: '200px', height: 'auto', display: 'inline-block' }} />
         </div>
         <div style={{ flex: 1, textAlign: 'right' }}>
-          <h2 style={{ margin: 0, color: '#0A1931', fontSize: '18px' }}>REPORTE TÉCNICO</h2>
+          <h2 style={{ margin: 0, color: '#0B1B3D', fontSize: '18px' }}>REPORTE TÉCNICO</h2>
           <p style={{ margin: '2px 0 0 0', color: '#8EC63F', fontWeight: 'bold', fontSize: '13px' }}>Servicios &amp; Mantenimiento</p>
         </div>
       </div>
@@ -276,7 +276,7 @@ export default function App() {
       <form onSubmit={generarPDF}>
         {/* DATOS GENERALES */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Datos Generales</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Datos Generales</legend>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div>
               <label><strong>Cliente:</strong></label>
@@ -308,7 +308,7 @@ export default function App() {
 
         {/* DATOS Y LECTURAS DEL EQUIPO */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Datos y Lecturas del Equipo</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Datos y Lecturas del Equipo</legend>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div>
               <label><strong>Equipo:</strong></label>
@@ -347,7 +347,7 @@ export default function App() {
 
         {/* DETALLE Y REFACCIONES */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Detalles del Servicio</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Detalles del Servicio</legend>
           <div style={{ marginBottom: '10px' }}>
             <label><strong>Trabajos Realizados y Observaciones:</strong></label>
             <textarea rows="4" required value={observaciones} onChange={(e) => setObservaciones(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Describe las actividades ejecutadas..." />
@@ -360,7 +360,7 @@ export default function App() {
 
         {/* FIRMA TÉCNICO DE SERVICIO */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Firma del Técnico de Servicio</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Firma del Técnico de Servicio</legend>
           <div style={{ border: '1px dashed #999', borderRadius: '4px', background: '#fff', textAlign: 'center' }}>
             <canvas
               ref={canvasTecnicoRef}
@@ -382,7 +382,7 @@ export default function App() {
 
         {/* FIRMA DEL CLIENTE */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Firma de Conformidad del Cliente</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Firma de Conformidad del Cliente</legend>
           <div style={{ marginBottom: '8px' }}>
             <label><strong>Nombre de quien recibe/firma:</strong></label>
             <input type="text" value={nombreFirmaCliente} onChange={(e) => setNombreFirmaCliente(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Nombre y cargo" />
@@ -408,7 +408,7 @@ export default function App() {
 
         {/* OPCIONES DE ENVÍO Y GENERACIÓN */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '20px', padding: '12px', background: '#f4f9eb' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Opciones de Envío</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Opciones de Envío</legend>
           <div style={{ marginBottom: '10px' }}>
             <label><strong>Correo(s) de Destino:</strong></label>
             <input type="text" value={correos} onChange={(e) => setCorreos(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="correo1@ejemplo.com, correo2@ejemplo.com" />
@@ -419,7 +419,7 @@ export default function App() {
           </div>
         </fieldset>
 
-        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0A1931', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginBottom: '10px' }}>
+        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0B1B3D', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginBottom: '10px' }}>
           📄 Generar y Guardar Reporte PDF
         </button>
       </form>
