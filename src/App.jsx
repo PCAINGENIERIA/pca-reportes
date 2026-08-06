@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import logoPCA from './Fondo blanco horizontal.png';
 
-// Logotipo oficial importado directamente desde el archivo local
 const LOGO_OFFICIAL_URL = logoPCA;
 
-// Lista oficial de técnicos de PCA Ingeniería & Servicios con su respectivo código/iniciales para folios
 const TECNICOS_PCA = [
   { nombre: 'Sebastián Zumárraga', codigo: 'SZ' },
   { nombre: 'Alfredo Zumárraga', codigo: 'ALZ' },
@@ -25,22 +23,37 @@ export default function App() {
   const [fecha, setFecha] = useState(new Date().toISOString().substring(0, 10));
   const [tipoTrabajo, setTipoTrabajo] = useState('Preventivo');
   
-  // Estado para Folio
-  const [numeroCorrelativo, setNumeroCorrelativo] = useState('001');
+  // Consecutivo por Técnico (Persistente)
+  const [numeroCorrelativo, setNumeroCorrelativo] = useState(1);
   const [folioCalculado, setFolioCalculado] = useState('');
 
-  // Estado para Fotografías de Evidencia
-  const [fotos, setFotos] = useState([]);
-
-  // Actualizar el folio automáticamente al cambiar el técnico seleccionado, la fecha o el número correlativo
+  // Cargar consecutivo del localStorage según el técnico seleccionado
   useEffect(() => {
     const tecObj = TECNICOS_PCA.find(t => t.nombre === tecnico) || { codigo: 'TEC' };
-    const anio = new Date(fecha || Date.now()).getFullYear();
-    const numFormateado = String(numeroCorrelativo).padStart(3, '0');
-    setFolioCalculado(`${tecObj.codigo}-${anio}-${numFormateado}`);
-  }, [tecnico, fecha, numeroCorrelativo]);
+    const keyStorage = `consecutivo_pca_${tecObj.codigo}`;
+    const guardado = localStorage.getItem(keyStorage);
+    
+    const consecutivoActual = guardado ? parseInt(guardado, 10) : 1;
+    setNumeroCorrelativo(consecutivoActual);
 
-  // Manejador para cargar/tomar fotos desde el celular
+    const anio = new Date(fecha || Date.now()).getFullYear();
+    const numFormateado = String(consecutivoActual).padStart(3, '0');
+    setFolioCalculado(`${tecObj.codigo}-${anio}-${numFormateado}`);
+  }, [tecnico, fecha]);
+
+  // Actualizar el folio calculado cuando se modifica manualmente el correlativo
+  const handleCorrelativoChange = (val) => {
+    const valNum = parseInt(val, 10) || 1;
+    setNumeroCorrelativo(valNum);
+    const tecObj = TECNICOS_PCA.find(t => t.nombre === tecnico) || { codigo: 'TEC' };
+    const anio = new Date(fecha || Date.now()).getFullYear();
+    const numFormateado = String(valNum).padStart(3, '0');
+    setFolioCalculado(`${tecObj.codigo}-${anio}-${numFormateado}`);
+  };
+
+  // Evidencia Fotográfica
+  const [fotos, setFotos] = useState([]);
+
   const handleFotosChange = (e) => {
     const files = Array.from(e.target.files);
     files.forEach(file => {
@@ -56,7 +69,7 @@ export default function App() {
     setFotos(fotos.filter((_, i) => i !== index));
   };
 
-  // Datos del Equipo y Lecturas
+  // Lecturas de Equipo
   const [equipo, setEquipo] = useState('');
   const [marca, setMarca] = useState('');
   const [modelo, setModelo] = useState('');
@@ -68,24 +81,21 @@ export default function App() {
   const [tempEntrada, setTempEntrada] = useState('');
   const [tempSalida, setTempSalida] = useState('');
 
-  // Detalle de Servicio y Refacciones
+  // Detalles
   const [observaciones, setObservaciones] = useState('');
   const [refacciones, setRefacciones] = useState('');
-
-  // Nombre para Firma del Cliente
   const [nombreFirmaCliente, setNombreFirmaCliente] = useState('');
 
-  // Firma Digital del Cliente
+  // Canvas Firmas
   const canvasClienteRef = useRef(null);
   const [isDrawingCliente, setIsDrawingCliente] = useState(false);
   const [firmaClienteURL, setFirmaClienteURL] = useState('');
 
-  // Firma Digital del Técnico
   const canvasTecnicoRef = useRef(null);
   const [isDrawingTecnico, setIsDrawingTecnico] = useState(false);
   const [firmaTecnicoURL, setFirmaTecnicoURL] = useState('');
 
-  // Lógica de Firma Cliente
+  // Handlers Firma Cliente
   const startDrawingCliente = (e) => {
     const canvas = canvasClienteRef.current;
     const ctx = canvas.getContext('2d');
@@ -126,7 +136,7 @@ export default function App() {
     }
   };
 
-  // Lógica de Firma Técnico
+  // Handlers Firma Técnico
   const startDrawingTecnico = (e) => {
     const canvas = canvasTecnicoRef.current;
     const ctx = canvas.getContext('2d');
@@ -167,9 +177,52 @@ export default function App() {
     }
   };
 
-  // Generación e Impresión en PDF con repetición de encabezado por página
+  // Función para reiniciar el formulario y avanzar el folio
+  const nuevoReporte = () => {
+    if (window.confirm('¿Deseas iniciar un nuevo reporte? Se limpiarán los datos del formulario actual.')) {
+      setCliente('');
+      setSitio('');
+      setEquipo('');
+      setMarca('');
+      setModelo('');
+      setSerie('');
+      setVoltaje('');
+      setAmperaje('');
+      setPresionAlta('');
+      setPresionBaja('');
+      setTempEntrada('');
+      setTempSalida('');
+      setObservaciones('');
+      setRefacciones('');
+      setNombreFirmaCliente('');
+      setFotos([]);
+      limpiarFirmaCliente();
+      limpiarFirmaTecnico();
+
+      // Incrementar el consecutivo del técnico en localStorage
+      const tecObj = TECNICOS_PCA.find(t => t.nombre === tecnico) || { codigo: 'TEC' };
+      const keyStorage = `consecutivo_pca_${tecObj.codigo}`;
+      const siguienteNum = numeroCorrelativo + 1;
+      localStorage.setItem(keyStorage, siguienteNum.toString());
+      setNumeroCorrelativo(siguienteNum);
+      
+      const anio = new Date(fecha || Date.now()).getFullYear();
+      const numFormateado = String(siguienteNum).padStart(3, '0');
+      setFolioCalculado(`${tecObj.codigo}-${anio}-${numFormateado}`);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Generar e Imprimir PDF
   const generarPDF = (e) => {
     e.preventDefault();
+
+    // Guardar el consecutivo actual en localStorage
+    const tecObj = TECNICOS_PCA.find(t => t.nombre === tecnico) || { codigo: 'TEC' };
+    const keyStorage = `consecutivo_pca_${tecObj.codigo}`;
+    localStorage.setItem(keyStorage, numeroCorrelativo.toString());
+
     const urlFirmaClienteFinal = firmaClienteURL || (canvasClienteRef.current ? canvasClienteRef.current.toDataURL() : '');
     const urlFirmaTecnicoFinal = firmaTecnicoURL || (canvasTecnicoRef.current ? canvasTecnicoRef.current.toDataURL() : '');
 
@@ -196,17 +249,9 @@ export default function App() {
               color: #333; 
               font-size: 12px; 
             }
-            table.print-container {
-              width: 100%;
-              border-collapse: collapse;
-              border: none;
-            }
-            thead.print-header {
-              display: table-header-group;
-            }
-            tbody.print-body {
-              display: table-row-group;
-            }
+            table.print-container { width: 100%; border-collapse: collapse; border: none; }
+            thead.print-header { display: table-header-group; }
+            tbody.print-body { display: table-row-group; }
             .header-container { 
               display: flex; 
               align-items: center; 
@@ -236,7 +281,7 @@ export default function App() {
         </head>
         <body>
           <table class="print-container">
-            <!-- ENCABEZADO QUE SE REPITE EN CADA PÁGINA IMPRESA -->
+            <!-- ENCABEZADO REPETIBLE EN CADA PÁGINA IMPRESA -->
             <thead class="print-header">
               <tr>
                 <td>
@@ -254,7 +299,7 @@ export default function App() {
               </tr>
             </thead>
 
-            <!-- CUERPO PRINCIPAL DEL REPORTE -->
+            <!-- CONTENIDO DEL REPORTE -->
             <tbody class="print-body">
               <tr>
                 <td>
@@ -334,7 +379,19 @@ export default function App() {
 
   return (
     <div style={{ padding: '15px', maxWidth: '650px', margin: 'auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
-      {/* ENCABEZADO EN PANTALLA */}
+      
+      {/* BARRA SUPERIOR CON BOTÓN DE NUEVO REPORTE */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+        <button 
+          type="button" 
+          onClick={nuevoReporte} 
+          style={{ backgroundColor: '#8EC63F', color: '#0B1B3D', border: 'none', padding: '8px 14px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
+        >
+          ➕ Iniciar Nuevo Reporte
+        </button>
+      </div>
+
+      {/* ENCABEZADO DE EN PANTALLA */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '2px solid #8EC63F', paddingBottom: '10px' }}>
         <div style={{ flex: 2 }}>
           <img 
@@ -372,14 +429,13 @@ export default function App() {
               </select>
             </div>
             <div>
-              <label><strong>No. Correlativo / Consecutivo:</strong></label>
+              <label><strong>No. Correlativo:</strong></label>
               <input 
                 type="number" 
                 required 
                 value={numeroCorrelativo} 
-                onChange={(e) => setNumeroCorrelativo(e.target.value)} 
+                onChange={(e) => handleCorrelativoChange(e.target.value)} 
                 style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} 
-                placeholder="001" 
                 min="1" 
               />
             </div>
@@ -546,9 +602,14 @@ export default function App() {
           </button>
         </fieldset>
 
-        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0B1B3D', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
-          📄 Generar y Guardar Reporte PDF
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button type="submit" style={{ flex: 2, padding: '14px', backgroundColor: '#0B1B3D', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
+            📄 Generar y Guardar Reporte PDF
+          </button>
+          <button type="button" onClick={nuevoReporte} style={{ flex: 1, padding: '14px', backgroundColor: '#8EC63F', color: '#0B1B3D', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '15px', cursor: 'pointer' }}>
+            ➕ Nuevo Reporte
+          </button>
+        </div>
       </form>
     </div>
   );
