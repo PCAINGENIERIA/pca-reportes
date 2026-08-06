@@ -20,6 +20,8 @@ export default function App() {
   const [amperaje, setAmperaje] = useState('');
   const [presionAlta, setPresionAlta] = useState('');
   const [presionBaja, setPresionBaja] = useState('');
+  const [tempEntrada, setTempEntrada] = useState('');
+  const [tempSalida, setTempSalida] = useState('');
 
   // Detalle de Servicio y Refacciones
   const [observaciones, setObservaciones] = useState('');
@@ -181,6 +183,7 @@ export default function App() {
               <tr><th>Modelo:</th><td>${modelo}</td><th>No. Serie:</th><td>${serie}</td></tr>
               <tr><th>Voltaje (V):</th><td>${voltaje}</td><th>Amperaje (A):</th><td>${amperaje}</td></tr>
               <tr><th>Presión Alta (PSI):</th><td>${presionAlta}</td><th>Presión Baja (PSI):</th><td>${presionBaja}</td></tr>
+              <tr><th>Temp. Entrada (°C/°F):</th><td>${tempEntrada}</td><th>Temp. Salida (°C/°F):</th><td>${tempSalida}</td></tr>
             </table>
           </div>
 
@@ -341,6 +344,14 @@ export default function App() {
             <div>
               <label><strong>Presión Baja (PSI):</strong></label>
               <input type="text" value={presionBaja} onChange={(e) => setPresionBaja(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
+            </div>
+            <div>
+              <label><strong>Temp. Entrada (°C / °F):</strong></label>
+              <input type="text" value={tempEntrada} onChange={(e) => setTempEntrada(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Ej. 12 °C" />
+            </div>
+            <div>
+              <label><strong>Temp. Salida (°C / °F):</strong></label>
+              <input type="text" value={tempSalida} onChange={(e) => setTempSalida(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Ej. 7 °C" />
             </div>
           </div>
         </fieldset>
