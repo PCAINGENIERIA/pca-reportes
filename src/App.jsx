@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 import logoPCA from './Fondo blanco horizontal.png';
 
-// Logotipo oficial vectorial PCA (100% autocontenido en Data URI para que nunca falle ni dependa de internet)
+// Logotipo oficial importado directamente desde el archivo local
 const LOGO_OFFICIAL_URL = logoPCA;
+
 export default function App() {
   // Datos Generales
   const [cliente, setCliente] = useState('');
@@ -27,9 +28,7 @@ export default function App() {
   const [observaciones, setObservaciones] = useState('');
   const [refacciones, setRefacciones] = useState('');
 
-  // Opciones de Envío
-  const [correos, setCorreos] = useState('');
-  const [telefono, setTelefono] = useState('');
+  // Nombre para Firma del Cliente
   const [nombreFirmaCliente, setNombreFirmaCliente] = useState('');
 
   // Firma Digital del Cliente
@@ -154,10 +153,9 @@ export default function App() {
           </style>
         </head>
         <body>
-          <!-- ENCABEZADO DEL REPORTE EN IMPRESIÓN / PDF -->
           <div class="header-container">
             <div class="logo-box">
-              <img src="${LOGO_OFFICIAL_URL}" style="width: 270px; height: auto; display: block;" alt="PCA Ingeniería &amp; Automatización" />
+              <img src="${LOGO_OFFICIAL_URL}" style="width: 270px; height: auto; display: block;" alt="PCA Ingeniería &amp; Servicios" />
             </div>
             <div class="header-info">
               <h2>REPORTE TÉCNICO</h2>
@@ -215,7 +213,7 @@ export default function App() {
           </div>
 
           <footer>
-            PCA Ingeniería &amp; Automatización - Documento generado el ${new Date().toLocaleDateString('es-MX')}
+            PCA Ingeniería &amp; Servicios - Documento generado el ${new Date().toLocaleDateString('es-MX')}
           </footer>
 
           <script>
@@ -227,39 +225,6 @@ export default function App() {
     ventanaImpresion.document.close();
   };
 
-  const enviarWhatsApp = () => {
-    const texto = `*REPORTE TÉCNICO DE SERVICIO - PCA INGENIERÍA & AUTOMATIZACIÓN*%0A%0A` +
-      `*Cliente:* ${cliente}%0A` +
-      `*Sitio:* ${sitio}%0A` +
-      `*Equipo:* ${equipo} (${marca})%0A` +
-      `*Técnico:* ${tecnico}%0A` +
-      `*Tipo:* ${tipoTrabajo}%0A%0A` +
-      `_Adjunto la ficha del servicio técnico realizado._`;
-    
-    const numLimpio = telefono.replace(/\D/g, '');
-    const url = numLimpio 
-      ? `https://api.whatsapp.com/send?phone=${numLimpio}&text=${texto}`
-      : `https://api.whatsapp.com/send?text=${texto}`;
-
-    window.open(url, '_blank');
-  };
-
-  const enviarCorreo = () => {
-    const asunto = encodeURIComponent(`Reporte Técnico de Servicio - ${cliente} (${sitio})`);
-    const cuerpo = encodeURIComponent(
-      `Estimados,\n\nAdjunto el reporte técnico de servicio correspondiente a PCA Ingeniería & Automatización.\n\n` +
-      `Cliente: ${cliente}\n` +
-      `Sitio: ${sitio}\n` +
-      `Equipo: ${equipo} - ${marca} (${modelo})\n` +
-      `Técnico Responsable: ${tecnico}\n` +
-      `Tipo de Trabajo: ${tipoTrabajo}\n\n` +
-      `Observaciones:\n${observaciones}\n\n` +
-      `PCA Ingeniería & Automatización`
-    );
-    
-    window.location.href = `mailto:${correos}?subject=${asunto}&body=${cuerpo}`;
-  };
-
   return (
     <div style={{ padding: '15px', maxWidth: '650px', margin: 'auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
       {/* ENCABEZADO EN PANTALLA */}
@@ -267,7 +232,7 @@ export default function App() {
         <div style={{ flex: 2 }}>
           <img 
             src={LOGO_OFFICIAL_URL} 
-            alt="PCA Ingeniería &amp; Automatización" 
+            alt="PCA Ingeniería &amp; Servicios" 
             style={{ width: '270px', height: 'auto', display: 'block', objectFit: 'contain' }} 
           />
         </div>
@@ -288,7 +253,7 @@ export default function App() {
             </div>
             <div>
               <label><strong>Sitio / Ubicación:</strong></label>
-              <input type="text" required value={sitio} onChange={(e) => setSitio(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Cancún, Playa, etc." />
+              <input type="text" required value={sitio} onChange={(e) => setSitio(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Ubicación / Proyecto" />
             </div>
             <div>
               <label><strong>Técnico Responsable:</strong></label>
@@ -320,7 +285,7 @@ export default function App() {
             </div>
             <div>
               <label><strong>Marca:</strong></label>
-              <input type="text" value={marca} onChange={(e) => setMarca(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="York, Trane, Carrier..." />
+              <input type="text" value={marca} onChange={(e) => setMarca(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Marca del equipo" />
             </div>
             <div>
               <label><strong>Modelo:</strong></label>
@@ -393,7 +358,7 @@ export default function App() {
         </fieldset>
 
         {/* FIRMA DEL CLIENTE */}
-        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '15px', marginBottom: '20px', padding: '12px', background: '#fff' }}>
           <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Firma de Conformidad del Cliente</legend>
           <div style={{ marginBottom: '8px' }}>
             <label><strong>Nombre de quien recibe/firma:</strong></label>
@@ -418,32 +383,10 @@ export default function App() {
           </button>
         </fieldset>
 
-        {/* OPCIONES DE ENVÍO Y GENERACIÓN */}
-        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '20px', padding: '12px', background: '#f4f9eb' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Opciones de Envío</legend>
-          <div style={{ marginBottom: '10px' }}>
-            <label><strong>Correo(s) de Destino:</strong></label>
-            <input type="text" value={correos} onChange={(e) => setCorreos(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="correo1@ejemplo.com, correo2@ejemplo.com" />
-          </div>
-          <div>
-            <label><strong>Teléfono Celular (WhatsApp):</strong></label>
-            <input type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Ej. 9981234567" />
-          </div>
-        </fieldset>
-
-        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0B1B3D', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginBottom: '10px' }}>
+        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0B1B3D', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
           📄 Generar y Guardar Reporte PDF
         </button>
       </form>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
-        <button onClick={enviarCorreo} style={{ padding: '12px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>
-          ✉️ Enviar por Correo
-        </button>
-        <button onClick={enviarWhatsApp} style={{ padding: '12px', backgroundColor: '#25D366', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>
-          💬 Compartir por WhatsApp
-        </button>
-      </div>
     </div>
   );
 }
