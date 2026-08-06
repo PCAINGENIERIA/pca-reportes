@@ -3,6 +3,7 @@ import logoPCA from './Fondo blanco horizontal.png';
 
 const LOGO_OFFICIAL_URL = logoPCA;
 
+// Lista oficial de técnicos de PCA Ingeniería & Servicios (Actualizada)
 const TECNICOS_PCA = [
   { nombre: 'Sebastián Zumárraga', codigo: 'SZ' },
   { nombre: 'Alfredo Zumárraga', codigo: 'ALZ' },
@@ -12,7 +13,8 @@ const TECNICOS_PCA = [
   { nombre: 'Nicolás Martínez', codigo: 'NM' },
   { nombre: 'Román Palma', codigo: 'RP' },
   { nombre: 'César Centeno', codigo: 'CC' },
-  { nombre: 'Alejandro Zumárraga', codigo: 'AZ' }
+  { nombre: 'Alejandro Zumárraga', codigo: 'AZ' },
+  { nombre: 'Alejandro Pérez', codigo: 'AP' }
 ];
 
 export default function App() {
