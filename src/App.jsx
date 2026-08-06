@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
 
+// Logotipo vectorial oficial PCA en Base64/SVG inline para renderizado directo en la App y PDF
+const LOGO_PCA_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 350" width="100%"><g fill="none" fill-rule="evenodd"><path d="M120,70 L280,70 C335.228,70 380,114.772 380,170 C380,225.228 335.228,270 280,270 L120,270 C64.772,270 20,225.228 20,170 C20,114.772 64.772,70 120,70 Z" stroke="%238EC63F" stroke-width="26"/><circle cx="280" cy="170" r="42" fill="%230A1931"/><path d="M400,80 L465,80 C500,80 525,100 525,135 C525,170 500,190 465,190 L435,190 L435,260 L400,260 L400,80 Z M435,112 L435,158 L460,158 C478,158 490,148 490,135 C490,122 478,112 460,112 L435,112 Z" fill="%230A1931"/><path d="M600,80 C645,80 675,115 675,170 C675,225 645,260 600,260 C555,260 525,225 525,170 C525,115 555,80 600,80 Z M600,112 C575,112 560,135 560,170 C560,205 575,228 600,228 C625,228 640,205 640,170 C640,135 625,112 600,112 Z" fill="%230A1931"/><path d="M720,80 L760,80 L825,260 L788,260 L774,220 L706,220 L692,260 L655,260 L720,80 Z M740,120 L716,190 L764,190 L740,120 Z" fill="%230A1931"/><circle cx="828" cy="92" r="14" stroke="%238EC63F" stroke-width="3" fill="none"/><text x="828" y="97" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="%238EC63F" text-anchor="middle">R</text><text x="855" y="145" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Ingeniería &amp;</text><text x="855" y="205" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Automatización</text></g></svg>`;
+
 export default function App() {
   // Datos Generales
   const [cliente, setCliente] = useState('');
@@ -132,16 +135,16 @@ export default function App() {
           <title>Reporte Técnico - ${cliente}</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; color: #333; font-size: 12px; }
-            .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0056b3; padding-bottom: 10px; margin-bottom: 15px; }
-            .logo-box { font-size: 24px; font-weight: bold; color: #0056b3; text-transform: uppercase; border: 2px solid #0056b3; padding: 5px 12px; border-radius: 4px; display: inline-block; }
+            .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #8EC63F; padding-bottom: 12px; margin-bottom: 15px; }
+            .logo-img { max-width: 280px; height: auto; display: block; }
             .header-info { text-align: right; }
-            .header-info h2 { margin: 0; color: #0056b3; font-size: 16px; }
-            .header-info p { margin: 2px 0 0 0; font-weight: bold; color: #555; font-size: 11px; }
+            .header-info h2 { margin: 0; color: #0A1931; font-size: 16px; font-weight: bold; }
+            .header-info p { margin: 3px 0 0 0; font-weight: bold; color: #8EC63F; font-size: 12px; }
             .seccion { margin-bottom: 12px; }
-            .titulo-seccion { background: #0056b3; color: white; padding: 4px 8px; font-weight: bold; font-size: 13px; margin-bottom: 6px; border-radius: 3px; }
+            .titulo-seccion { background: #0A1931; color: white; padding: 5px 8px; font-weight: bold; font-size: 12px; margin-bottom: 6px; border-radius: 3px; border-left: 4px solid #8EC63F; }
             table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
             th, td { border: 1px solid #ccc; padding: 5px 7px; text-align: left; }
-            th { background: #f2f2f2; width: 25%; font-weight: bold; }
+            th { background: #f2f2f2; width: 25%; font-weight: bold; color: #0A1931; }
             .firmas-grid { display: flex; justify-content: space-between; margin-top: 25px; gap: 20px; }
             .firma-box { width: 48%; text-align: center; }
             .firma-img { max-width: 180px; height: 50px; object-fit: contain; border-bottom: 1px solid #333; margin-bottom: 4px; }
@@ -150,10 +153,10 @@ export default function App() {
         </head>
         <body>
           <div class="header-container">
-            <div class="logo-box">PCA</div>
+            <img src="${LOGO_PCA_SVG}" class="logo-img" alt="PCA Ingeniería &amp; Automatización" />
             <div class="header-info">
-              <h2>PCA INGENIERÍA Y SERVICIOS</h2>
-              <p>REPORTE TÉCNICO DE SERVICIO Y MANTENIMIENTO</p>
+              <h2>REPORTE TÉCNICO DE CAMPO</h2>
+              <p>MANTENIMIENTO Y SERVICIOS</p>
             </div>
           </div>
 
@@ -206,7 +209,7 @@ export default function App() {
           </div>
 
           <footer>
-            PCA Ingeniería y Servicios S.A. de C.V. - Documento generado el ${new Date().toLocaleDateString('es-MX')}
+            PCA Ingeniería &amp; Automatización - Documento generado el ${new Date().toLocaleDateString('es-MX')}
           </footer>
 
           <script>
@@ -219,7 +222,7 @@ export default function App() {
   };
 
   const enviarWhatsApp = () => {
-    const texto = `*REPORTE TÉCNICO DE SERVICIO - PCA INGENIERÍA*%0A%0A` +
+    const texto = `*REPORTE TÉCNICO DE SERVICIO - PCA INGENIERÍA & AUTOMATIZACIÓN*%0A%0A` +
       `*Cliente:* ${cliente}%0A` +
       `*Sitio:* ${sitio}%0A` +
       `*Equipo:* ${equipo} (${marca})%0A` +
@@ -238,14 +241,14 @@ export default function App() {
   const enviarCorreo = () => {
     const asunto = encodeURIComponent(`Reporte Técnico de Servicio - ${cliente} (${sitio})`);
     const cuerpo = encodeURIComponent(
-      `Estimados,\n\nAdjunto el reporte técnico de servicio correspondiente a PCA Ingeniería y Servicios.\n\n` +
+      `Estimados,\n\nAdjunto el reporte técnico de servicio correspondiente a PCA Ingeniería & Automatización.\n\n` +
       `Cliente: ${cliente}\n` +
       `Sitio: ${sitio}\n` +
       `Equipo: ${equipo} - ${marca} (${modelo})\n` +
       `Técnico Responsable: ${tecnico}\n` +
       `Tipo de Trabajo: ${tipoTrabajo}\n\n` +
       `Observaciones:\n${observaciones}\n\n` +
-      `PCA Ingeniería y Servicios S.A. de C.V.`
+      `PCA Ingeniería & Automatización`
     );
     
     window.location.href = `mailto:${correos}?subject=${asunto}&body=${cuerpo}`;
@@ -253,21 +256,19 @@ export default function App() {
 
   return (
     <div style={{ padding: '15px', maxWidth: '650px', margin: 'auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
-      {/* CABECERA CON LOGO PCA */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '2px solid #0056b3', paddingBottom: '10px' }}>
-        <div style={{ fontSize: '26px', fontWeight: 'bold', color: '#0056b3', border: '2px solid #0056b3', padding: '4px 12px', borderRadius: '4px' }}>
-          PCA
-        </div>
+      {/* CABECERA CON LOGO OFICIAL PCA */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '2px solid #8EC63F', paddingBottom: '12px' }}>
+        <img src={LOGO_PCA_SVG} alt="PCA Ingeniería & Automatización" style={{ maxWidth: '220px', height: 'auto' }} />
         <div style={{ textAlign: 'right' }}>
-          <h2 style={{ margin: 0, color: '#0056b3', fontSize: '18px' }}>PCA INGENIERÍA Y SERVICIOS</h2>
-          <p style={{ margin: '2px 0 0 0', color: '#666', fontWeight: 'bold', fontSize: '12px' }}>Reporte Técnico de Campo</p>
+          <h2 style={{ margin: 0, color: '#0A1931', fontSize: '16px' }}>REPORTE TÉCNICO</h2>
+          <p style={{ margin: '2px 0 0 0', color: '#8EC63F', fontWeight: 'bold', fontSize: '12px' }}>Servicios &amp; Mantenimiento</p>
         </div>
       </div>
 
       <form onSubmit={generarPDF}>
         {/* DATOS GENERALES */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0056b3' }}>Datos Generales</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Datos Generales</legend>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div>
               <label><strong>Cliente:</strong></label>
@@ -299,7 +300,7 @@ export default function App() {
 
         {/* DATOS Y LECTURAS DEL EQUIPO */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0056b3' }}>Datos y Lecturas del Equipo</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Datos y Lecturas del Equipo</legend>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div>
               <label><strong>Equipo:</strong></label>
@@ -338,7 +339,7 @@ export default function App() {
 
         {/* DETALLE Y REFACCIONES */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0056b3' }}>Detalles del Servicio</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Detalles del Servicio</legend>
           <div style={{ marginBottom: '10px' }}>
             <label><strong>Trabajos Realizados y Observaciones:</strong></label>
             <textarea rows="4" required value={observaciones} onChange={(e) => setObservaciones(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Describe las actividades ejecutadas..." />
@@ -351,7 +352,7 @@ export default function App() {
 
         {/* FIRMA TÉCNICO DE SERVICIO */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0056b3' }}>Firma del Técnico de Servicio</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Firma del Técnico de Servicio</legend>
           <div style={{ border: '1px dashed #999', borderRadius: '4px', background: '#fff', textAlign: 'center' }}>
             <canvas
               ref={canvasTecnicoRef}
@@ -373,7 +374,7 @@ export default function App() {
 
         {/* FIRMA DEL CLIENTE */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0056b3' }}>Firma de Conformidad del Cliente</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Firma de Conformidad del Cliente</legend>
           <div style={{ marginBottom: '8px' }}>
             <label><strong>Nombre de quien recibe/firma:</strong></label>
             <input type="text" value={nombreFirmaCliente} onChange={(e) => setNombreFirmaCliente(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Nombre y cargo" />
@@ -398,8 +399,8 @@ export default function App() {
         </fieldset>
 
         {/* OPCIONES DE ENVÍO Y GENERACIÓN */}
-        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '20px', padding: '12px', background: '#eef5fc' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0056b3' }}>Opciones de Envío</legend>
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '20px', padding: '12px', background: '#f4f9eb' }}>
+          <legend style={{ fontWeight: 'bold', color: '#0A1931' }}>Opciones de Envío</legend>
           <div style={{ marginBottom: '10px' }}>
             <label><strong>Correo(s) de Destino:</strong></label>
             <input type="text" value={correos} onChange={(e) => setCorreos(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="correo1@ejemplo.com, correo2@ejemplo.com" />
@@ -410,7 +411,7 @@ export default function App() {
           </div>
         </fieldset>
 
-        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0056b3', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginBottom: '10px' }}>
+        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0A1931', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginBottom: '10px' }}>
           📄 Generar y Guardar Reporte PDF
         </button>
       </form>
