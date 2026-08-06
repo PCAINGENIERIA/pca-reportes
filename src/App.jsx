@@ -1,10 +1,9 @@
 import React, { useState, useRef } from 'react';
 
-export default function App() {
-  // Carga de la imagen original en base64 para cero deformación
-  // (Usa la URL o Base64 de la imagen 'Fondo blanco horizontal_3.png')
-  const LOGO_OFFICIAL_URL = "./Fondo blanco horizontal_3.png"; 
+// SVG del Logotipo Horizontal PCA corregido pixel por pixel segun la imagen original
+const LOGO_PCA_HORIZONTAL_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 240" width="100%"><g fill="none" fill-rule="evenodd"><rect x="30" y="40" width="220" height="160" rx="80" stroke="%238EC63F" stroke-width="24" fill="none"/><circle cx="180" cy="120" r="32" fill="%230B1B3D"/><text x="310" y="155" font-family="'Helvetica Neue', Arial, sans-serif" font-size="130" font-weight="900" fill="%230B1B3D" letter-spacing="-2">PCA</text><circle cx="602" cy="62" r="11" stroke="%238EC63F" stroke-width="3" fill="none"/><text x="602" y="66" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="%238EC63F" text-anchor="middle">R</text><text x="635" y="112" font-family="'Helvetica Neue', Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Ingeniería &amp;</text><text x="635" y="160" font-family="'Helvetica Neue', Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Automatización</text></g></svg>`;
 
+export default function App() {
   // Datos Generales
   const [cliente, setCliente] = useState('');
   const [sitio, setSitio] = useState('');
@@ -41,7 +40,7 @@ export default function App() {
   const [isDrawingTecnico, setIsDrawingTecnico] = useState(false);
   const [firmaTecnicoURL, setFirmaTecnicoURL] = useState('');
 
-  // Lógica Firma Cliente
+  // Lógica de Firma Cliente
   const startDrawingCliente = (e) => {
     const canvas = canvasClienteRef.current;
     const ctx = canvas.getContext('2d');
@@ -82,7 +81,7 @@ export default function App() {
     }
   };
 
-  // Lógica Firma Técnico
+  // Lógica de Firma Técnico
   const startDrawingTecnico = (e) => {
     const canvas = canvasTecnicoRef.current;
     const ctx = canvas.getContext('2d');
@@ -137,11 +136,12 @@ export default function App() {
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; color: #333; font-size: 12px; }
             .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #8EC63F; padding-bottom: 12px; margin-bottom: 18px; }
-            .logo-box { flex: 2; text-align: left; }
-            .logo-img { width: 280px; height: auto; object-fit: contain; }
+            .logo-center { flex: 1; text-align: center; }
+            .logo-img { max-width: 220px; height: auto; display: inline-block; }
             .header-info { text-align: right; flex: 1; }
             .header-info h2 { margin: 0; color: #0B1B3D; font-size: 18px; font-weight: bold; }
             .header-info p { margin: 4px 0 0 0; font-weight: bold; color: #8EC63F; font-size: 13px; }
+            .header-spacer { flex: 1; }
             .seccion { margin-bottom: 12px; }
             .titulo-seccion { background: #0B1B3D; color: white; padding: 5px 8px; font-weight: bold; font-size: 12px; margin-bottom: 6px; border-radius: 3px; border-left: 4px solid #8EC63F; }
             table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
@@ -155,8 +155,9 @@ export default function App() {
         </head>
         <body>
           <div class="header-container">
-            <div class="logo-box">
-              <img src="${LOGO_OFFICIAL_URL}" class="logo-img" alt="PCA Ingeniería &amp; Automatización" />
+            <div class="header-spacer"></div>
+            <div class="logo-center">
+              <img src="${LOGO_PCA_HORIZONTAL_SVG}" class="logo-img" alt="PCA Ingeniería &amp; Automatización" />
             </div>
             <div class="header-info">
               <h2>REPORTE TÉCNICO</h2>
@@ -225,12 +226,46 @@ export default function App() {
     ventanaImpresion.document.close();
   };
 
+  const enviarWhatsApp = () => {
+    const texto = `*REPORTE TÉCNICO DE SERVICIO - PCA INGENIERÍA & AUTOMATIZACIÓN*%0A%0A` +
+      `*Cliente:* ${cliente}%0A` +
+      `*Sitio:* ${sitio}%0A` +
+      `*Equipo:* ${equipo} (${marca})%0A` +
+      `*Técnico:* ${tecnico}%0A` +
+      `*Tipo:* ${tipoTrabajo}%0A%0A` +
+      `_Adjunto la ficha del servicio técnico realizado._`;
+    
+    const numLimpio = telefono.replace(/\D/g, '');
+    const url = numLimpio 
+      ? `https://api.whatsapp.com/send?phone=${numLimpio}&text=${texto}`
+      : `https://api.whatsapp.com/send?text=${texto}`;
+
+    window.open(url, '_blank');
+  };
+
+  const enviarCorreo = () => {
+    const asunto = encodeURIComponent(`Reporte Técnico de Servicio - ${cliente} (${sitio})`);
+    const cuerpo = encodeURIComponent(
+      `Estimados,\n\nAdjunto el reporte técnico de servicio correspondiente a PCA Ingeniería & Automatización.\n\n` +
+      `Cliente: ${cliente}\n` +
+      `Sitio: ${sitio}\n` +
+      `Equipo: ${equipo} - ${marca} (${modelo})\n` +
+      `Técnico Responsable: ${tecnico}\n` +
+      `Tipo de Trabajo: ${tipoTrabajo}\n\n` +
+      `Observaciones:\n${observaciones}\n\n` +
+      `PCA Ingeniería & Automatización`
+    );
+    
+    window.location.href = `mailto:${correos}?subject=${asunto}&body=${cuerpo}`;
+  };
+
   return (
     <div style={{ padding: '15px', maxWidth: '650px', margin: 'auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
-      {/* ENCABEZADO CON EL LOGO EXACTO SIN DEFORMACIÓN */}
+      {/* CABECERA CON LOGO HORIZONTAL CENTRADO Y BIEN PROPORCIONADO */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '2px solid #8EC63F', paddingBottom: '10px' }}>
-        <div style={{ flex: 2 }}>
-          <img src={LOGO_OFFICIAL_URL} alt="PCA Ingeniería & Automatización" style={{ width: '250px', height: 'auto', display: 'block', objectFit: 'contain' }} />
+        <div style={{ flex: 1 }}></div>
+        <div style={{ flex: 1, textAlign: 'center' }}>
+          <img src={LOGO_PCA_HORIZONTAL_SVG} alt="PCA Ingeniería & Automatización" style={{ maxWidth: '200px', height: 'auto', display: 'inline-block' }} />
         </div>
         <div style={{ flex: 1, textAlign: 'right' }}>
           <h2 style={{ margin: 0, color: '#0B1B3D', fontSize: '18px' }}>REPORTE TÉCNICO</h2>
@@ -239,7 +274,7 @@ export default function App() {
       </div>
 
       <form onSubmit={generarPDF}>
-        {/* CAMPOS DEL FORMULARIO */}
+        {/* DATOS GENERALES */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
           <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Datos Generales</legend>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -260,13 +295,143 @@ export default function App() {
               <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
             </div>
           </div>
+          <div style={{ marginTop: '10px' }}>
+            <label><strong>Tipo de Servicio:</strong></label>
+            <select value={tipoTrabajo} onChange={(e) => setTipoTrabajo(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px' }}>
+              <option value="Preventivo">Mantenimiento Preventivo</option>
+              <option value="Correctivo">Mantenimiento Correctivo</option>
+              <option value="Diagnostico">Diagnóstico / Revisión</option>
+              <option value="Instalacion">Instalación / Arranque</option>
+            </select>
+          </div>
         </fieldset>
 
-        {/* OTROS CAMPOS Y BOTONES */}
-        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0B1B3D', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
-          📄 Generar Reporte PDF
+        {/* DATOS Y LECTURAS DEL EQUIPO */}
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Datos y Lecturas del Equipo</legend>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div>
+              <label><strong>Equipo:</strong></label>
+              <input type="text" required value={equipo} onChange={(e) => setEquipo(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Chiller, Bomba, UMA..." />
+            </div>
+            <div>
+              <label><strong>Marca:</strong></label>
+              <input type="text" value={marca} onChange={(e) => setMarca(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="York, Trane, Carrier..." />
+            </div>
+            <div>
+              <label><strong>Modelo:</strong></label>
+              <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
+            </div>
+            <div>
+              <label><strong>No. Serie:</strong></label>
+              <input type="text" value={serie} onChange={(e) => setSerie(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
+            </div>
+            <div>
+              <label><strong>Voltaje (V):</strong></label>
+              <input type="text" value={voltaje} onChange={(e) => setVoltaje(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="220V / 440V" />
+            </div>
+            <div>
+              <label><strong>Amperaje (A):</strong></label>
+              <input type="text" value={amperaje} onChange={(e) => setAmperaje(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
+            </div>
+            <div>
+              <label><strong>Presión Alta (PSI):</strong></label>
+              <input type="text" value={presionAlta} onChange={(e) => setPresionAlta(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
+            </div>
+            <div>
+              <label><strong>Presión Baja (PSI):</strong></label>
+              <input type="text" value={presionBaja} onChange={(e) => setPresionBaja(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
+            </div>
+          </div>
+        </fieldset>
+
+        {/* DETALLE Y REFACCIONES */}
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Detalles del Servicio</legend>
+          <div style={{ marginBottom: '10px' }}>
+            <label><strong>Trabajos Realizados y Observaciones:</strong></label>
+            <textarea rows="4" required value={observaciones} onChange={(e) => setObservaciones(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Describe las actividades ejecutadas..." />
+          </div>
+          <div>
+            <label><strong>Refacciones / Materiales Utilizados:</strong></label>
+            <textarea rows="2" value={refacciones} onChange={(e) => setRefacciones(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Lista de insumos, filtros, aceite, refacciones..." />
+          </div>
+        </fieldset>
+
+        {/* FIRMA TÉCNICO DE SERVICIO */}
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Firma del Técnico de Servicio</legend>
+          <div style={{ border: '1px dashed #999', borderRadius: '4px', background: '#fff', textAlign: 'center' }}>
+            <canvas
+              ref={canvasTecnicoRef}
+              width={320}
+              height={100}
+              style={{ touchAction: 'none', cursor: 'crosshair', display: 'block', margin: 'auto' }}
+              onMouseDown={startDrawingTecnico}
+              onMouseMove={drawTecnico}
+              onMouseUp={stopDrawingTecnico}
+              onTouchStart={startDrawingTecnico}
+              onTouchMove={drawTecnico}
+              onTouchEnd={stopDrawingTecnico}
+            />
+          </div>
+          <button type="button" onClick={limpiarFirmaTecnico} style={{ marginTop: '5px', padding: '4px 10px', fontSize: '12px', cursor: 'pointer' }}>
+            Borrar / Limpiar Firma Técnico
+          </button>
+        </fieldset>
+
+        {/* FIRMA DEL CLIENTE */}
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Firma de Conformidad del Cliente</legend>
+          <div style={{ marginBottom: '8px' }}>
+            <label><strong>Nombre de quien recibe/firma:</strong></label>
+            <input type="text" value={nombreFirmaCliente} onChange={(e) => setNombreFirmaCliente(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Nombre y cargo" />
+          </div>
+          <div style={{ border: '1px dashed #999', borderRadius: '4px', background: '#fff', textAlign: 'center' }}>
+            <canvas
+              ref={canvasClienteRef}
+              width={320}
+              height={100}
+              style={{ touchAction: 'none', cursor: 'crosshair', display: 'block', margin: 'auto' }}
+              onMouseDown={startDrawingCliente}
+              onMouseMove={drawCliente}
+              onMouseUp={stopDrawingCliente}
+              onTouchStart={startDrawingCliente}
+              onTouchMove={drawCliente}
+              onTouchEnd={stopDrawingCliente}
+            />
+          </div>
+          <button type="button" onClick={limpiarFirmaCliente} style={{ marginTop: '5px', padding: '4px 10px', fontSize: '12px', cursor: 'pointer' }}>
+            Borrar / Limpiar Firma Cliente
+          </button>
+        </fieldset>
+
+        {/* OPCIONES DE ENVÍO Y GENERACIÓN */}
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '20px', padding: '12px', background: '#f4f9eb' }}>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Opciones de Envío</legend>
+          <div style={{ marginBottom: '10px' }}>
+            <label><strong>Correo(s) de Destino:</strong></label>
+            <input type="text" value={correos} onChange={(e) => setCorreos(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="correo1@ejemplo.com, correo2@ejemplo.com" />
+          </div>
+          <div>
+            <label><strong>Teléfono Celular (WhatsApp):</strong></label>
+            <input type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Ej. 9981234567" />
+          </div>
+        </fieldset>
+
+        <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#0B1B3D', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginBottom: '10px' }}>
+          📄 Generar y Guardar Reporte PDF
         </button>
       </form>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
+        <button onClick={enviarCorreo} style={{ padding: '12px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>
+          ✉️ Enviar por Correo
+        </button>
+        <button onClick={enviarWhatsApp} style={{ padding: '12px', backgroundColor: '#25D366', color: '#fff', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>
+          💬 Compartir por WhatsApp
+        </button>
+      </div>
     </div>
   );
 }
