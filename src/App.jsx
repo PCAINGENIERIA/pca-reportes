@@ -1,16 +1,41 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import logoPCA from './Fondo blanco horizontal.png';
 
 // Logotipo oficial importado directamente desde el archivo local
 const LOGO_OFFICIAL_URL = logoPCA;
 
+// Lista oficial de técnicos de PCA Ingeniería & Servicios con su respectivo código/iniciales para folios
+const TECNICOS_PCA = [
+  { nombre: 'Sebastián Zumárraga', codigo: 'SZ' },
+  { nombre: 'Alfredo Zumárraga', codigo: 'ALZ' },
+  { nombre: 'Alberto Zumárraga', codigo: 'ABZ' },
+  { nombre: 'Arturo Aviléz', codigo: 'AA' },
+  { nombre: 'Óscar Flores', codigo: 'OF' },
+  { nombre: 'Nicolás Martínez', codigo: 'NM' },
+  { nombre: 'Román Palma', codigo: 'RP' },
+  { nombre: 'César Centeno', codigo: 'CC' },
+  { nombre: 'Alejandro Zumárraga', codigo: 'AZ' }
+];
+
 export default function App() {
   // Datos Generales
   const [cliente, setCliente] = useState('');
   const [sitio, setSitio] = useState('');
-  const [tecnico, setTecnico] = useState('');
+  const [tecnico, setTecnico] = useState(TECNICOS_PCA[0].nombre);
   const [fecha, setFecha] = useState(new Date().toISOString().substring(0, 10));
   const [tipoTrabajo, setTipoTrabajo] = useState('Preventivo');
+  
+  // Estado para Folio
+  const [numeroCorrelativo, setNumeroCorrelativo] = useState('001');
+  const [folioCalculado, setFolioCalculado] = useState('');
+
+  // Actualizar el folio automáticamente al cambiar el técnico seleccionado, la fecha o el número correlativo
+  useEffect(() => {
+    const tecObj = TECNICOS_PCA.find(t => t.nombre === tecnico) || { codigo: 'TEC' };
+    const anio = new Date(fecha || Date.now()).getFullYear();
+    const numFormateado = String(numeroCorrelativo).padStart(3, '0');
+    setFolioCalculado(`${tecObj.codigo}-${anio}-${numFormateado}`);
+  }, [tecnico, fecha, numeroCorrelativo]);
 
   // Datos del Equipo y Lecturas
   const [equipo, setEquipo] = useState('');
@@ -133,14 +158,15 @@ export default function App() {
     ventanaImpresion.document.write(`
       <html>
         <head>
-          <title>Reporte Técnico - ${cliente}</title>
+          <title>Reporte Técnico ${folioCalculado} - ${cliente}</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; color: #333; font-size: 12px; }
             .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #8EC63F; padding-bottom: 12px; margin-bottom: 18px; }
             .logo-box { flex: 2; }
-            .header-info { text-align: right; flex: 1; }
+            .header-info { text-align: right; flex: 1.5; }
             .header-info h2 { margin: 0; color: #0B1B3D; font-size: 18px; font-weight: bold; }
             .header-info p { margin: 4px 0 0 0; font-weight: bold; color: #8EC63F; font-size: 13px; }
+            .folio-badge { background: #0B1B3D; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 6px; }
             .seccion { margin-bottom: 12px; }
             .titulo-seccion { background: #0B1B3D; color: white; padding: 5px 8px; font-weight: bold; font-size: 12px; margin-bottom: 6px; border-radius: 3px; border-left: 4px solid #8EC63F; }
             table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
@@ -160,15 +186,16 @@ export default function App() {
             <div class="header-info">
               <h2>REPORTE TÉCNICO</h2>
               <p>Servicios &amp; Mantenimiento</p>
+              <div class="folio-badge">FOLIO: ${folioCalculado}</div>
             </div>
           </div>
 
           <div class="seccion">
             <div class="titulo-seccion">DATOS GENERALES</div>
             <table>
-              <tr><th>Cliente / Razón Social:</th><td>${cliente}</td><th>Fecha:</th><td>${fecha}</td></tr>
-              <tr><th>Sitio / Ubicación:</th><td>${sitio}</td><th>Tipo de Servicio:</th><td>${tipoTrabajo}</td></tr>
-              <tr><th>Técnico Responsable:</th><td colspan="3">${tecnico}</td></tr>
+              <tr><th>FOLIO DE SERVICIO:</th><td style="font-weight:bold; color:#0B1B3D;">${folioCalculado}</td><th>Fecha:</th><td>${fecha}</td></tr>
+              <tr><th>Cliente / Razón Social:</th><td>${cliente}</td><th>Tipo de Servicio:</th><td>${tipoTrabajo}</td></tr>
+              <tr><th>Sitio / Ubicación:</th><td>${sitio}</td><th>Técnico Responsable:</th><td>${tecnico}</td></tr>
             </table>
           </div>
 
@@ -202,7 +229,7 @@ export default function App() {
             <div class="firma-box">
               <p style="margin: 0 0 5px 0;"><strong>FIRMA TÉCNICO RESPONSABLE</strong></p>
               ${urlFirmaTecnicoFinal ? `<img src="${urlFirmaTecnicoFinal}" class="firma-img" /><br/>` : '<div style="height:50px; border-bottom:1px solid #333;"></div>'}
-              <span><strong>${tecnico || 'Técnico PCA'}</strong></span>
+              <span><strong>${tecnico}</strong></span>
             </div>
 
             <div class="firma-box">
@@ -213,7 +240,7 @@ export default function App() {
           </div>
 
           <footer>
-            PCA Ingeniería &amp; Servicios - Documento generado el ${new Date().toLocaleDateString('es-MX')}
+            PCA Ingeniería &amp; Servicios - Reporte ${folioCalculado} generado el ${new Date().toLocaleDateString('es-MX')}
           </footer>
 
           <script>
@@ -236,17 +263,46 @@ export default function App() {
             style={{ width: '270px', height: 'auto', display: 'block', objectFit: 'contain' }} 
           />
         </div>
-        <div style={{ flex: 1, textAlign: 'right' }}>
+        <div style={{ flex: 1.5, textAlign: 'right' }}>
           <h2 style={{ margin: 0, color: '#0B1B3D', fontSize: '18px' }}>REPORTE TÉCNICO</h2>
           <p style={{ margin: '2px 0 0 0', color: '#8EC63F', fontWeight: 'bold', fontSize: '13px' }}>Servicios &amp; Mantenimiento</p>
+          <div style={{ background: '#0B1B3D', color: '#fff', padding: '3px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', marginTop: '6px', display: 'inline-block' }}>
+            FOLIO: {folioCalculado}
+          </div>
         </div>
       </div>
 
       <form onSubmit={generarPDF}>
-        {/* DATOS GENERALES */}
+        {/* DATOS GENERALES Y SELECCIÓN DE TÉCNICO */}
         <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
-          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Datos Generales</legend>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Datos Generales y Folio</legend>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div>
+              <label><strong>Técnico Responsable:</strong></label>
+              <select 
+                value={tecnico} 
+                onChange={(e) => setTecnico(e.target.value)} 
+                style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }}
+              >
+                {TECNICOS_PCA.map((t) => (
+                  <option key={t.nombre} value={t.nombre}>
+                    {t.nombre} ({t.codigo})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label><strong>No. Correlativo / Consecutivo:</strong></label>
+              <input 
+                type="number" 
+                required 
+                value={numeroCorrelativo} 
+                onChange={(e) => setNumeroCorrelativo(e.target.value)} 
+                style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} 
+                placeholder="001" 
+                min="1" 
+              />
+            </div>
             <div>
               <label><strong>Cliente:</strong></label>
               <input type="text" required value={cliente} onChange={(e) => setCliente(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Nombre / Empresa" />
@@ -256,22 +312,18 @@ export default function App() {
               <input type="text" required value={sitio} onChange={(e) => setSitio(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Ubicación / Proyecto" />
             </div>
             <div>
-              <label><strong>Técnico Responsable:</strong></label>
-              <input type="text" required value={tecnico} onChange={(e) => setTecnico(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} placeholder="Nombre del técnico" />
-            </div>
-            <div>
               <label><strong>Fecha:</strong></label>
               <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
             </div>
-          </div>
-          <div style={{ marginTop: '10px' }}>
-            <label><strong>Tipo de Servicio:</strong></label>
-            <select value={tipoTrabajo} onChange={(e) => setTipoTrabajo(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px' }}>
-              <option value="Preventivo">Mantenimiento Preventivo</option>
-              <option value="Correctivo">Mantenimiento Correctivo</option>
-              <option value="Diagnostico">Diagnóstico / Revisión</option>
-              <option value="Instalacion">Instalación / Arranque</option>
-            </select>
+            <div>
+              <label><strong>Tipo de Servicio:</strong></label>
+              <select value={tipoTrabajo} onChange={(e) => setTipoTrabajo(e.target.value)} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }}>
+                <option value="Preventivo">Mantenimiento Preventivo</option>
+                <option value="Correctivo">Mantenimiento Correctivo</option>
+                <option value="Diagnostico">Diagnóstico / Revisión</option>
+                <option value="Instalacion">Instalación / Arranque</option>
+              </select>
+            </div>
           </div>
         </fieldset>
 
@@ -358,7 +410,7 @@ export default function App() {
         </fieldset>
 
         {/* FIRMA DEL CLIENTE */}
-        <fieldset style={{ border: '1px solid #ccc', borderRadius: '15px', marginBottom: '20px', padding: '12px', background: '#fff' }}>
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '20px', padding: '12px', background: '#fff' }}>
           <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Firma de Conformidad del Cliente</legend>
           <div style={{ marginBottom: '8px' }}>
             <label><strong>Nombre de quien recibe/firma:</strong></label>
