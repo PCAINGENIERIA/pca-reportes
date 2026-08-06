@@ -8,11 +8,56 @@ export default function App() {
   const [telefono, setTelefono] = useState('');
   const [reporteListo, setReporteListo] = useState(false);
 
-  const handleFinalizar = (e) => {
+  const generarPDFyGuardar = (e) => {
     e.preventDefault();
-    
-    // 1. Simulación/Generación local del reporte
-    alert('Reporte generado y guardado exitosamente.');
+
+    // Crear una ventana temporal formateada para imprimir/guardar PDF
+    const ventanaImpresion = window.open('', '_blank');
+    ventanaImpresion.document.write(`
+      <html>
+        <head>
+          <title>Reporte Técnico - ${cliente}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; color: #333; }
+            h1 { color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 8px; }
+            .campo { margin-bottom: 15px; }
+            .label { font-weight: bold; color: #555; }
+            .valor { margin-top: 4px; padding: 8px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; }
+            footer { margin-top: 40px; font-size: 12px; color: #777; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <h1>PCA INGENIERÍA Y SERVICIOS</h1>
+          <h3>Reporte Técnico de Servicio</h3>
+          
+          <div class="campo">
+            <div class="label">Cliente / Sitio:</div>
+            <div class="valor">${cliente}</div>
+          </div>
+          
+          <div class="campo">
+            <div class="label">Equipo Atendido:</div>
+            <div class="valor">${equipo}</div>
+          </div>
+
+          <div class="campo">
+            <div class="label">Observaciones y Mantenimiento Realizado:</div>
+            <div class="valor">${observaciones.replace(/\n/g, '<br/>')}</div>
+          </div>
+
+          <footer>
+            Generado desde PCA Reportes Técnicos - ${new Date().toLocaleDateString('es-MX')}
+          </footer>
+          <script>
+            window.onload = function() {
+              window.print();
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    ventanaImpresion.document.close();
+
     setReporteListo(true);
   };
 
@@ -21,7 +66,7 @@ export default function App() {
       `*Cliente:* ${cliente}%0A` +
       `*Equipo:* ${equipo}%0A` +
       `*Observaciones:* ${observaciones}%0A%0A` +
-      `_Adjunto el reporte en PDF desde mis archivos._`;
+      `_Te adjunto el documento PDF descargado._`;
     
     const numLimpio = telefono.replace(/\D/g, '');
     const url = numLimpio 
@@ -34,7 +79,7 @@ export default function App() {
   const enviarCorreo = () => {
     const asunto = encodeURIComponent(`Reporte de Servicio Técnico - ${cliente}`);
     const cuerpo = encodeURIComponent(
-      `Estimado cliente,\n\nSe adjunta el reporte técnico de servicio.\n\n` +
+      `Estimado cliente,\n\nSe adjunta el reporte técnico de servicio correspondiente a PCA Ingeniería y Servicios.\n\n` +
       `Cliente: ${cliente}\n` +
       `Equipo: ${equipo}\n` +
       `Observaciones: ${observaciones}\n\n` +
@@ -46,9 +91,9 @@ export default function App() {
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', fontFamily: 'sans-serif' }}>
-      <h2>PCA - Reporte de Servicio Técnico</h2>
+      <h2 style={{ color: '#0056b3' }}>PCA - Reporte de Servicio Técnico</h2>
       
-      <form onSubmit={handleFinalizar}>
+      <form onSubmit={generarPDFyGuardar}>
         <div style={{ marginBottom: '10px' }}>
           <label><strong>Cliente / Sitio:</strong></label><br/>
           <input 
@@ -56,7 +101,7 @@ export default function App() {
             required 
             value={cliente} 
             onChange={(e) => setCliente(e.target.value)} 
-            style={{ width: '100%', padding: '8px', marginTop: '4px' }} 
+            style={{ width: '100%', padding: '8px', marginTop: '4px', boxSizing: 'border-box' }} 
             placeholder="Ej. Hotel Barceló / Liverpool Cancún"
           />
         </div>
@@ -68,7 +113,7 @@ export default function App() {
             required 
             value={equipo} 
             onChange={(e) => setEquipo(e.target.value)} 
-            style={{ width: '100%', padding: '8px', marginTop: '4px' }} 
+            style={{ width: '100%', padding: '8px', marginTop: '4px', boxSizing: 'border-box' }} 
             placeholder="Ej. Chiller York / Bomba de Condensados"
           />
         </div>
@@ -79,7 +124,7 @@ export default function App() {
             rows="4" 
             value={observaciones} 
             onChange={(e) => setObservaciones(e.target.value)} 
-            style={{ width: '100%', padding: '8px', marginTop: '4px' }} 
+            style={{ width: '100%', padding: '8px', marginTop: '4px', boxSizing: 'border-box' }} 
             placeholder="Detalles del mantenimiento o revisión..."
           />
         </div>
@@ -93,10 +138,9 @@ export default function App() {
             type="text" 
             value={correos} 
             onChange={(e) => setCorreos(e.target.value)} 
-            style={{ width: '100%', padding: '8px', marginTop: '4px' }} 
+            style={{ width: '100%', padding: '8px', marginTop: '4px', boxSizing: 'border-box' }} 
             placeholder="correo1@ejemplo.com, correo2@ejemplo.com"
           />
-          <small>Puedes colocar varias direcciones separadas por coma.</small>
         </div>
 
         <div style={{ marginBottom: '15px' }}>
@@ -105,8 +149,8 @@ export default function App() {
             type="tel" 
             value={telefono} 
             onChange={(e) => setTelefono(e.target.value)} 
-            style={{ width: '100%', padding: '8px', marginTop: '4px' }} 
-            placeholder="Ej. 9981234567 (Opcional)"
+            style={{ width: '100%', padding: '8px', marginTop: '4px', boxSizing: 'border-box' }} 
+            placeholder="Ej. 9981234567"
           />
         </div>
 
@@ -114,13 +158,13 @@ export default function App() {
           type="submit" 
           style={{ width: '100%', padding: '12px', backgroundColor: '#0056b3', color: '#fff', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}
         >
-          Guardar y Finalizar
+          📄 Guardar y Generar PDF
         </button>
       </form>
 
       {reporteListo && (
         <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#e9ecef', borderRadius: '5px' }}>
-          <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>¡Reporte Finalizado! Elige cómo deseas compartirlo:</p>
+          <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>¡PDF Generado! Elige cómo enviarlo:</p>
           
           <button 
             onClick={enviarCorreo} 
