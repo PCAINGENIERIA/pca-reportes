@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 
-// Logotipo vectorial oficial PCA en Base64/SVG inline para renderizado directo en la App y PDF
-const LOGO_PCA_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 350" width="100%"><g fill="none" fill-rule="evenodd"><path d="M120,70 L280,70 C335.228,70 380,114.772 380,170 C380,225.228 335.228,270 280,270 L120,270 C64.772,270 20,225.228 20,170 C20,114.772 64.772,70 120,70 Z" stroke="%238EC63F" stroke-width="26"/><circle cx="280" cy="170" r="42" fill="%230A1931"/><path d="M400,80 L465,80 C500,80 525,100 525,135 C525,170 500,190 465,190 L435,190 L435,260 L400,260 L400,80 Z M435,112 L435,158 L460,158 C478,158 490,148 490,135 C490,122 478,112 460,112 L435,112 Z" fill="%230A1931"/><path d="M600,80 C645,80 675,115 675,170 C675,225 645,260 600,260 C555,260 525,225 525,170 C525,115 555,80 600,80 Z M600,112 C575,112 560,135 560,170 C560,205 575,228 600,228 C625,228 640,205 640,170 C640,135 625,112 600,112 Z" fill="%230A1931"/><path d="M720,80 L760,80 L825,260 L788,260 L774,220 L706,220 L692,260 L655,260 L720,80 Z M740,120 L716,190 L764,190 L740,120 Z" fill="%230A1931"/><circle cx="828" cy="92" r="14" stroke="%238EC63F" stroke-width="3" fill="none"/><text x="828" y="97" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="%238EC63F" text-anchor="middle">R</text><text x="855" y="145" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Ingeniería &amp;</text><text x="855" y="205" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="%238EC63F">Automatización</text></g></svg>`;
+// Logotipo oficial vertical PCA en SVG inline (Isotipo + PCA + Ingeniería & Automatización)
+const LOGO_PCA_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 380" width="100%"><g fill="none" fill-rule="evenodd"><path d="M170,30 L330,30 C374.183,30 410,65.817 410,110 C410,154.183 374.183,190 330,190 L170,190 C125.817,190 90,154.183 90,110 C90,65.817 125.817,30 170,30 Z" stroke="%238EC63F" stroke-width="24"/><circle cx="330" cy="110" r="38" fill="%230A1931"/><circle cx="425" cy="45" r="11" stroke="%238EC63F" stroke-width="2.5" fill="none"/><text x="425" y="49" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="%238EC63F" text-anchor="middle">R</text><path d="M50,240 L115,240 C150,240 175,260 175,295 C175,330 150,350 115,350 L85,350 L85,420 L50,420 L50,240 Z M85,272 L85,318 L110,318 C128,318 140,308 140,295 C140,282 128,272 110,272 L85,272 Z" fill="%230A1931"/><path d="M250,240 C295,240 325,275 325,330 C325,385 295,420 250,420 C205,420 175,385 175,330 C175,275 205,240 250,240 Z M250,272 C225,272 210,295 210,330 C210,365 225,388 250,388 C275,388 290,365 290,330 C290,295 275,272 250,272 Z" fill="%230A1931"/><path d="M370,240 L410,240 L475,420 L438,420 L424,380 L356,380 L342,420 L305,420 L370,240 Z M390,280 L366,350 L414,350 L390,280 Z" fill="%230A1931"/><text x="250" y="455" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="%238EC63F" text-anchor="middle">Ingeniería &amp; Automatización</text></g></svg>`;
 
 export default function App() {
   // Datos Generales
@@ -136,10 +136,10 @@ export default function App() {
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; color: #333; font-size: 12px; }
             .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #8EC63F; padding-bottom: 12px; margin-bottom: 15px; }
-            .logo-img { max-width: 280px; height: auto; display: block; }
+            .logo-img { max-width: 140px; height: auto; display: block; }
             .header-info { text-align: right; }
-            .header-info h2 { margin: 0; color: #0A1931; font-size: 16px; font-weight: bold; }
-            .header-info p { margin: 3px 0 0 0; font-weight: bold; color: #8EC63F; font-size: 12px; }
+            .header-info h2 { margin: 0; color: #0A1931; font-size: 18px; font-weight: bold; }
+            .header-info p { margin: 4px 0 0 0; font-weight: bold; color: #8EC63F; font-size: 13px; }
             .seccion { margin-bottom: 12px; }
             .titulo-seccion { background: #0A1931; color: white; padding: 5px 8px; font-weight: bold; font-size: 12px; margin-bottom: 6px; border-radius: 3px; border-left: 4px solid #8EC63F; }
             table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
@@ -256,12 +256,12 @@ export default function App() {
 
   return (
     <div style={{ padding: '15px', maxWidth: '650px', margin: 'auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
-      {/* CABECERA CON LOGO OFICIAL PCA */}
+      {/* CABECERA CON LOGO PCA VERTICAL */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '2px solid #8EC63F', paddingBottom: '12px' }}>
-        <img src={LOGO_PCA_SVG} alt="PCA Ingeniería & Automatización" style={{ maxWidth: '220px', height: 'auto' }} />
+        <img src={LOGO_PCA_SVG} alt="PCA Ingeniería & Automatización" style={{ maxWidth: '120px', height: 'auto' }} />
         <div style={{ textAlign: 'right' }}>
-          <h2 style={{ margin: 0, color: '#0A1931', fontSize: '16px' }}>REPORTE TÉCNICO</h2>
-          <p style={{ margin: '2px 0 0 0', color: '#8EC63F', fontWeight: 'bold', fontSize: '12px' }}>Servicios &amp; Mantenimiento</p>
+          <h2 style={{ margin: 0, color: '#0A1931', fontSize: '18px' }}>REPORTE TÉCNICO</h2>
+          <p style={{ margin: '2px 0 0 0', color: '#8EC63F', fontWeight: 'bold', fontSize: '13px' }}>Servicios &amp; Mantenimiento</p>
         </div>
       </div>
 
