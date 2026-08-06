@@ -29,6 +29,9 @@ export default function App() {
   const [numeroCorrelativo, setNumeroCorrelativo] = useState('001');
   const [folioCalculado, setFolioCalculado] = useState('');
 
+  // Estado para Fotografías de Evidencia
+  const [fotos, setFotos] = useState([]);
+
   // Actualizar el folio automáticamente al cambiar el técnico seleccionado, la fecha o el número correlativo
   useEffect(() => {
     const tecObj = TECNICOS_PCA.find(t => t.nombre === tecnico) || { codigo: 'TEC' };
@@ -36,6 +39,22 @@ export default function App() {
     const numFormateado = String(numeroCorrelativo).padStart(3, '0');
     setFolioCalculado(`${tecObj.codigo}-${anio}-${numFormateado}`);
   }, [tecnico, fecha, numeroCorrelativo]);
+
+  // Manejador para cargar/tomar fotos desde el celular
+  const handleFotosChange = (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFotos(prevFotos => [...prevFotos, reader.result]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const eliminarFoto = (index) => {
+    setFotos(fotos.filter((_, i) => i !== index));
+  };
 
   // Datos del Equipo y Lecturas
   const [equipo, setEquipo] = useState('');
@@ -154,6 +173,12 @@ export default function App() {
     const urlFirmaClienteFinal = firmaClienteURL || (canvasClienteRef.current ? canvasClienteRef.current.toDataURL() : '');
     const urlFirmaTecnicoFinal = firmaTecnicoURL || (canvasTecnicoRef.current ? canvasTecnicoRef.current.toDataURL() : '');
 
+    const fotosHTML = fotos.map(foto => `
+      <div style="width: 48%; margin-bottom: 10px; border: 1px solid #ddd; padding: 4px; border-radius: 4px; box-sizing: border-box; text-align: center;">
+        <img src="${foto}" style="max-width: 100%; max-height: 180px; object-fit: contain; border-radius: 2px;" />
+      </div>
+    `).join('');
+
     const ventanaImpresion = window.open('', '_blank');
     ventanaImpresion.document.write(`
       <html>
@@ -167,12 +192,13 @@ export default function App() {
             .header-info h2 { margin: 0; color: #0B1B3D; font-size: 18px; font-weight: bold; }
             .header-info p { margin: 4px 0 0 0; font-weight: bold; color: #8EC63F; font-size: 13px; }
             .folio-badge { background: #0B1B3D; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 6px; }
-            .seccion { margin-bottom: 12px; }
+            .seccion { margin-bottom: 12px; page-break-inside: avoid; }
             .titulo-seccion { background: #0B1B3D; color: white; padding: 5px 8px; font-weight: bold; font-size: 12px; margin-bottom: 6px; border-radius: 3px; border-left: 4px solid #8EC63F; }
             table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
             th, td { border: 1px solid #ccc; padding: 5px 7px; text-align: left; }
             th { background: #f2f2f2; width: 25%; font-weight: bold; color: #0B1B3D; }
-            .firmas-grid { display: flex; justify-content: space-between; margin-top: 25px; gap: 20px; }
+            .fotos-grid { display: flex; flex-wrap: wrap; gap: 4%; justify-content: flex-start; }
+            .firmas-grid { display: flex; justify-content: space-between; margin-top: 25px; gap: 20px; page-break-inside: avoid; }
             .firma-box { width: 48%; text-align: center; }
             .firma-img { max-width: 180px; height: 50px; object-fit: contain; border-bottom: 1px solid #333; margin-bottom: 4px; }
             footer { text-align: center; font-size: 10px; color: #777; margin-top: 25px; border-top: 1px solid #ddd; padding-top: 6px; }
@@ -222,6 +248,14 @@ export default function App() {
             <div class="titulo-seccion">REFACCIONES Y MATERIALES UTILIZADOS</div>
             <div style="border: 1px solid #ccc; padding: 8px; background: #fafafa;">
               ${refacciones.replace(/\n/g, '<br/>')}
+            </div>
+          </div>` : ''}
+
+          ${fotos.length > 0 ? `
+          <div class="seccion">
+            <div class="titulo-seccion">EVIDENCIA FOTOGRÁFICA</div>
+            <div class="fotos-grid">
+              ${fotosHTML}
             </div>
           </div>` : ''}
 
@@ -385,6 +419,37 @@ export default function App() {
             <label><strong>Refacciones / Materiales Utilizados:</strong></label>
             <textarea rows="2" value={refacciones} onChange={(e) => setRefacciones(e.target.value)} style={{ width: '100%', padding: '6px', marginTop: '4px', boxSizing: 'border-box' }} placeholder="Lista de insumos, filtros, aceite, refacciones..." />
           </div>
+        </fieldset>
+
+        {/* EVIDENCIA FOTOGRÁFICA DESDE EL CELULAR */}
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '15px', padding: '12px', background: '#fff' }}>
+          <legend style={{ fontWeight: 'bold', color: '#0B1B3D' }}>Evidencia Fotográfica</legend>
+          <label style={{ display: 'block', marginBottom: '8px' }}>
+            <strong>Tomar o adjuntar fotos desde el celular:</strong>
+          </label>
+          <input 
+            type="file" 
+            accept="image/*" 
+            multiple 
+            onChange={handleFotosChange} 
+            style={{ marginBottom: '10px' }} 
+          />
+          {fotos.length > 0 && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '10px', marginTop: '10px' }}>
+              {fotos.map((foto, index) => (
+                <div key={index} style={{ position: 'relative', border: '1px solid #ddd', borderRadius: '4px', padding: '2px' }}>
+                  <img src={foto} alt={`Evidencia ${index + 1}`} style={{ width: '100%', height: '80px', objectFit: 'cover', borderRadius: '2px' }} />
+                  <button 
+                    type="button" 
+                    onClick={() => eliminarFoto(index)} 
+                    style={{ position: 'absolute', top: '2px', right: '2px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </fieldset>
 
         {/* FIRMA TÉCNICO DE SERVICIO */}
