@@ -27,23 +27,29 @@ export default function App() {
   };
 
   // 1. GENERAR Y DESCARGAR PDF (Sin ventana de impresión)
-  const generarPDF = () => {
-    const elemento = document.getElementById('reporte-contenido');
+ // 1. GENERAR Y DESCARGAR PDF (Fuerza descarga sin diálogo de impresión)
+  const generarPDF = async (e) => {
+    if (e) e.preventDefault(); // Detiene cualquier comportamiento por defecto del botón
     
+    const elemento = document.getElementById('reporte-contenido');
+    if (!elemento) return;
+
     const opciones = {
       margin:       10,
       filename:     `Reporte_PCA_${formData.folio || 'servicio'}.pdf`,
       image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2 },
+      html2canvas:  { scale: 2, useCORS: true },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // Descarga el PDF directo en el celular o PC
-    html2pdf().set(opciones).from(elemento).save();
+    // Usar await evita que el navegador abra la ventana de impresión nativa
+    await html2pdf().set(opciones).from(elemento).save();
   };
 
   // 2. GUARDAR Y FINALIZAR REPORTE
-  const guardarYFinalizar = () => {
+  const guardarYFinalizar = async (e) => {
+    if (e) e.preventDefault();
+
     if (!formData.folio || !formData.cliente) {
       alert("Por favor completa los datos mínimos del reporte.");
       return;
@@ -56,11 +62,10 @@ export default function App() {
       bloqueado: true // Marcar como no editable
     };
 
-    setReportesGuardados([...reportesGuardados, nuevoReporte]);
-    generarPDF();
+    setReportesGuardados((prev) => [...prev, nuevoReporte]);
+    await generarPDF();
     setEsSoloLectura(true); // Cambia la vista activa a modo solo lectura
   };
-
   // Cargar un reporte del historial para revisar
   const verReporteGuardado = (reporte) => {
     setFormData(reporte);
@@ -142,17 +147,25 @@ export default function App() {
       </div>
 
       {/* BOTONES DE ACCIÓN */}
-      <div className="mt-4 flex gap-4">
-        {!esSoloLectura ? (
-          <button onClick={guardarYFinalizar} className="btn-guardar">
-            Finalizar, Guardar y Generar PDF
-          </button>
-        ) : (
-          <button onClick={generarPDF} className="btn-descargar">
-            Descargar PDF nuevamente
-          </button>
-        )}
-      </div>
+<div className="mt-4 flex gap-4">
+  {!esSoloLectura ? (
+    <button 
+      type="button" 
+      onClick={guardarYFinalizar} 
+      className="btn-guardar"
+    >
+      Finalizar, Guardar y Generar PDF
+    </button>
+  ) : (
+    <button 
+      type="button" 
+      onClick={generarPDF} 
+      className="btn-descargar"
+    >
+      Descargar PDF nuevamente
+    </button>
+  )}
+</div>
 
       {/* HISTORIAL DE REPORTES GUARDADOS */}
       <div className="mt-8">
