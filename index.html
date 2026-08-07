@@ -10,9 +10,27 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="PCA Reportes" />
     <meta name="theme-color" content="#0B1B3D" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+
+    <!-- Tipografías y librería de PDF que usa la app de Reportes de Servicio -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Estilos de la app de Reportes de Servicio -->
+    <link rel="stylesheet" href="/pca-app.css" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- App de Reportes de Servicio: corre por fuera de React, montada aquí -->
+    <div id="app"></div>
+    <div class="toast" id="toast"></div>
+    <script src="/pca-app.js"></script>
   </body>
 </html>
