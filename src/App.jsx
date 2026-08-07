@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 export default function App() {
   // Lista de reportes guardados
@@ -25,58 +26,63 @@ export default function App() {
       [e.target.name]: e.target.value
     });
   };
+// 1. GENERAR Y DESCARGAR PDF SIN IMPRESIÓN
+const generarPDF = async (e) => {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
-  // 1. GENERAR Y DESCARGAR PDF (Sin ventana de impresión)
- // 1. GENERAR Y DESCARGAR PDF (Fuerza descarga sin diálogo de impresión)
- const generarPDF = async (e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  const elemento = document.getElementById('reporte-contenido');
+  if (!elemento) return;
 
-    const elemento = document.getElementById('reporte-contenido');
-    if (!elemento) return;
+  try {
+    const canvas = await html2canvas(elemento, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false
+    });
 
-    const opciones = {
-      margin:       10,
-      filename:     `Reporte_PCA_${formData.folio || 'servicio'}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+    const imgData = canvas.toDataURL('image/jpeg', 0.98);
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-    try {
-      // Forzar la generación del PDF como objeto y guardarlo directamente como archivo
-      const worker = html2pdf().set(opciones).from(elemento);
-      await worker.toPdf().get('pdf').then((pdf) => {
-        // Asegura que no exista ninguna bandera de autoPrint en el objeto de jsPDF
-      });
-      await worker.save();
-    } catch (err) {
-      console.error("Error al exportar PDF:", err);
-    }
+    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`Reporte_PCA_${formData.folio || 'servicio'}.pdf`);
+  } catch (error) {
+    console.error("Error generando PDF:", error);
+    alert("Hubo un detalle al generar el archivo.");
+  }
+};
+
+// 2. GUARDAR Y FINALIZAR REPORTE
+const guardarYFinalizar = async (e) => {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  if (!formData.folio || !formData.cliente) {
+    alert("Por favor completa los datos mínimos del reporte.");
+    return;
+  }
+
+  const nuevoReporte = {
+    ...formData,
+    id: Date.now(),
+    fecha: new Date().toLocaleDateString(),
+    bloqueado: true
   };
 
-  // 2. GUARDAR Y FINALIZAR REPORTE
-  const guardarYFinalizar = async (e) => {
-    if (e) e.preventDefault();
+  setReportesGuardados((prev) => [...prev, nuevoReporte]);
+  setEsSoloLectura(true);
 
-    if (!formData.folio || !formData.cliente) {
-      alert("Por favor completa los datos mínimos del reporte.");
-      return;
-    }
-
-    const nuevoReporte = {
-      ...formData,
-      id: Date.now(),
-      fecha: new Date().toLocaleDateString(),
-      bloqueado: true // Marcar como no editable
-    };
-
-    setReportesGuardados((prev) => [...prev, nuevoReporte]);
-    await generarPDF();
-    setEsSoloLectura(true); // Cambia la vista activa a modo solo lectura
-  };
+  setTimeout(() => {
+    generarPDF();
+  }, 150);
+};
   // Cargar un reporte del historial para revisar
   const verReporteGuardado = (reporte) => {
     setFormData(reporte);
