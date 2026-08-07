@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import html2pdf from 'html2pdf.js';
-import jsPDF from 'jspdf';
 
+export default function App() {
 export default function App() {
   // Lista de reportes guardados
   const [reportesGuardados, setReportesGuardados] = useState([]);
@@ -45,7 +45,6 @@ const generarPDF = async (e) => {
     };
 
     try {
-      // Forzamos el uso del motor directo de html2pdf para guardar el archivo
       await html2pdf().from(elemento).set(opciones).save();
     } catch (err) {
       console.error("Error al exportar PDF:", err);
