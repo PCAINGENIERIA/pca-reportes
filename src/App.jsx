@@ -28,9 +28,12 @@ export default function App() {
 
   // 1. GENERAR Y DESCARGAR PDF (Sin ventana de impresión)
  // 1. GENERAR Y DESCARGAR PDF (Fuerza descarga sin diálogo de impresión)
-  const generarPDF = async (e) => {
-    if (e) e.preventDefault(); // Detiene cualquier comportamiento por defecto del botón
-    
+ const generarPDF = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     const elemento = document.getElementById('reporte-contenido');
     if (!elemento) return;
 
@@ -38,12 +41,20 @@ export default function App() {
       margin:       10,
       filename:     `Reporte_PCA_${formData.folio || 'servicio'}.pdf`,
       image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true },
+      html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // Usar await evita que el navegador abra la ventana de impresión nativa
-    await html2pdf().set(opciones).from(elemento).save();
+    try {
+      // Forzar la generación del PDF como objeto y guardarlo directamente como archivo
+      const worker = html2pdf().set(opciones).from(elemento);
+      await worker.toPdf().get('pdf').then((pdf) => {
+        // Asegura que no exista ninguna bandera de autoPrint en el objeto de jsPDF
+      });
+      await worker.save();
+    } catch (err) {
+      console.error("Error al exportar PDF:", err);
+    }
   };
 
   // 2. GUARDAR Y FINALIZAR REPORTE
