@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import html2pdf from 'html2pdf.js';
 
 export default function App() {
-export default function App() {
   // Lista de reportes guardados
   const [reportesGuardados, setReportesGuardados] = useState([]);
   
