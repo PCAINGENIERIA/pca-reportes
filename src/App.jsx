@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import html2canvas from 'html2canvas';
+import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 
 export default function App() {
@@ -28,35 +28,29 @@ export default function App() {
   };
 // 1. GENERAR Y DESCARGAR PDF SIN IMPRESIÓN
 const generarPDF = async (e) => {
-  if (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
-  const elemento = document.getElementById('reporte-contenido');
-  if (!elemento) return;
+    const elemento = document.getElementById('reporte-contenido');
+    if (!elemento) return;
 
-  try {
-    const canvas = await html2canvas(elemento, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: false
-    });
+    const opciones = {
+      margin:       10,
+      filename:     `Reporte_PCA_${formData.folio || 'servicio'}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-    const imgData = canvas.toDataURL('image/jpeg', 0.98);
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`Reporte_PCA_${formData.folio || 'servicio'}.pdf`);
-  } catch (error) {
-    console.error("Error generando PDF:", error);
-    alert("Hubo un detalle al generar el archivo.");
-  }
-};
-
+    try {
+      // Forzamos el uso del motor directo de html2pdf para guardar el archivo
+      await html2pdf().from(elemento).set(opciones).save();
+    } catch (err) {
+      console.error("Error al exportar PDF:", err);
+    }
+  };
 // 2. GUARDAR Y FINALIZAR REPORTE
 const guardarYFinalizar = async (e) => {
   if (e) {
